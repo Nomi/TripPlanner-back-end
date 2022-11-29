@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using TripPlannerAPI.DTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Services;
@@ -42,8 +43,9 @@ namespace TripPlannerAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
+            if (null != await _userManager.FindByNameAsync(registerDto.UserName))
+                return StatusCode((int)HttpStatusCode.Conflict, "The requested username is already in use.");
 
-            //Does this check uniqueness?
             var user = new User { UserName = registerDto.UserName, Email = registerDto.Email };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
