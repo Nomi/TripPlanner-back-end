@@ -9,6 +9,7 @@ using System.Text;
 using TripPlannerAPI.Data;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Services;
+using TripPlannerAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,7 @@ builder.Services.AddSwaggerGen(setup =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = JwtBearerDefaults.AuthenticationScheme,
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+        Description = "Put **_ONLY_** your JWT Bearer n on textbox below!",
 
         Reference = new OpenApiReference
         {
@@ -72,6 +73,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
+//builder.Services.AddScoped<TripManager>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 var app = builder.Build();
 
