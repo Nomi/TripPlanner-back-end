@@ -10,6 +10,7 @@ using TripPlannerAPI.Data;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Services;
 using TripPlannerAPI.Repositories;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,11 +47,13 @@ builder.Services.AddSwaggerGen(setup =>
 
 });
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+//builder.Services.AddDbContext<AppDbContext>(opt =>
+//{
+//    //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
+//    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//});
 //builder.Services.AddCors();
 builder.Services.AddIdentityCore<User>(opt =>
 {
