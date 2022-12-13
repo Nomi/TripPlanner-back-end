@@ -105,5 +105,28 @@ namespace TripPlannerAPI.Controllers
             }
             return StatusCode(statusCode, resBody);
         }
+
+        internal List<String> possibleQueryParams = new List<string>() { "created-future", "created-past", "joined-future", "joined-past" };
+        [Authorize]
+        [HttpGet("my-trips/{queryParam}")]
+        [ProducesResponseType(typeof(tripListContainer), 200)]
+        [ProducesResponseType(typeof(msgOnlyResp),(int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<tripListContainer>> GetTripsByQueryParam(string queryParam)
+        {
+            
+            if (!possibleQueryParams.Contains(queryParam))
+            {
+                msgOnlyResp badreqRespBody = new msgOnlyResp();
+                badreqRespBody.message = "Failure. The recieved queryParam doesn't match allowed types.";
+                return StatusCode((int)HttpStatusCode.BadRequest, badreqRespBody);
+            }
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            List<string> args = queryParam.Split('-').ToList();
+            var result = await tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
+
+            var respBody = new tripListContainer();
+            respBody.trips = (List<Trip>)result;
+            return StatusCode((int)HttpStatusCode.OK, respBody);
+        }
     }
 }

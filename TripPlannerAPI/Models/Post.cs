@@ -8,6 +8,6 @@ namespace TripPlannerAPI.Models
         public int postId { get; set; }
         public User Creator { get; set; }
         public Trip RelatedTrip { get; set; }
-        public String? Content { get; set; }
+        public String Content { get; set; }
     }
 }

@@ -75,6 +75,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 //builder.Services.AddScoped<TripManager>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddCors(options => options.AddPolicy("Cors",
             builder =>
             {

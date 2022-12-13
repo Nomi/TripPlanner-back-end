@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TripPlannerAPI.Data;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
 
 namespace TripPlannerAPI.Repositories
 {
@@ -40,10 +41,33 @@ namespace TripPlannerAPI.Repositories
         {
             return await appDbContext.Trips.Where(t=>t.tripId == id).Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x=>x.preferences).FirstOrDefaultAsync(t => t.tripId == id);
         }
-
         public async Task<IEnumerable<Trip>> GetTripsAsync()
         {
             return await appDbContext.Trips.Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences).ToListAsync();
+        }
+        public async Task<IEnumerable<Trip>> GetTripsQueryParamFilteredAsync(string relationship, string timeperiod, User usr)
+        {
+            Expression<Func<Trip, bool>> isRelated = (x => x.tripId !=-1);
+            Expression<Func<Trip, bool>> isFromTimePeriod = (x => x.tripId != -1);
+            if (relationship == "created")
+            {
+                isRelated = (t => (t.creator.Id == usr.Id));
+            }
+            else
+            {
+                isRelated = (t => t.members.Any(u => u.Id == usr.Id));
+            }
+            if(timeperiod=="future")
+            {
+                isFromTimePeriod = (t => t.date > DateTime.Now);
+            }
+            else
+            {
+                isFromTimePeriod = (t => t.date <= DateTime.Now);
+            }
+            return await appDbContext.Trips.Where(isRelated).Where(isFromTimePeriod)
+                .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences)
+                .ToListAsync();
         }
         public async Task<IEnumerable<Trip>> GetTripsNotMemberOrCreatorAsync(User usr)
         {

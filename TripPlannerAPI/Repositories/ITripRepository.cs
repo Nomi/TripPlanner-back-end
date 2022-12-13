@@ -9,7 +9,7 @@ namespace TripPlannerAPI.Repositories
     {
         public Task<Trip> GetTripAsync(int id);
         public Task<IEnumerable<Trip>> GetTripsNotMemberOrCreatorAsync(User usr);
-        public Task<IEnumerable<Trip>> GetTripsAsync();
+        public Task<IEnumerable<Trip>> GetTripsQueryParamFilteredAsync(string relationship, string timeperiod, User usr);
         public Task<Trip> CreateTripAsync(Trip trip);
         public Task<Trip> UpdateTripAsync(Trip trip);
         public void DeleteTripAsync(int id);
