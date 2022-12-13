@@ -51,7 +51,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddCors();
+//builder.Services.AddCors();
 builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
@@ -75,6 +75,15 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 //builder.Services.AddScoped<TripManager>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddCors(options => options.AddPolicy("Cors",
+            builder =>
+            {
+                builder.
+                AllowAnyOrigin().
+                AllowAnyMethod().
+                AllowAnyHeader();
+            }));
+
 
 var app = builder.Build();
 
@@ -85,12 +94,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+
+
+//app.UseCors(x => x
+//.AllowAnyOrigin()
+//.AllowAnyHeader()
+//.AllowAnyMethod()
+//.SetIsOriginAllowed(origin=>true));
+app.UseRouting();
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

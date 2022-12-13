@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TripPlannerAPI.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace TripPlannerAPI.Repositories
 {
@@ -37,12 +38,17 @@ namespace TripPlannerAPI.Repositories
 
         public async Task<Trip> GetTripAsync(int id)
         {
-            return await appDbContext.Trips.FirstOrDefaultAsync(t => t.tripId == id);
+            return await appDbContext.Trips.Where(t=>t.tripId == id).Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x=>x.preferences).FirstOrDefaultAsync(t => t.tripId == id);
         }
 
         public async Task<IEnumerable<Trip>> GetTripsAsync()
         {
-            return await appDbContext.Trips.ToListAsync();
+            return await appDbContext.Trips.Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences).ToListAsync();
+        }
+        public async Task<IEnumerable<Trip>> GetTripsNotMemberOrCreatorAsync(User usr)
+        {
+            return await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id)))
+                .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).ToListAsync();
         }
 
         public async Task<Trip> UpdateTripAsync(Trip trip)
@@ -58,7 +64,7 @@ namespace TripPlannerAPI.Repositories
 
                 return result;
             }
-
+            
             return null;
         }
     }
