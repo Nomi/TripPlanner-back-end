@@ -71,7 +71,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-            .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+            .GetBytes("Token Key 12 chars"))//builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
 builder.Services.AddAuthorization();
