@@ -32,7 +32,7 @@ namespace TripPlannerAPI.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:TokenKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Token Key 12 chars"));//_config["JWTSettings:TokenKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenOptions = new JwtSecurityToken(
