@@ -92,7 +92,7 @@ builder.Services.AddCors(options => options.AddPolicy("Cors",
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (true) //(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
