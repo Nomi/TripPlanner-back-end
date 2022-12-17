@@ -11,6 +11,7 @@ using TripPlannerAPI.DTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Repositories;
 using TripPlannerAPI.Services;
+using static TripPlannerAPI.Controllers.TripController;
 
 namespace TripPlannerAPI.Controllers
 {
@@ -127,6 +128,39 @@ namespace TripPlannerAPI.Controllers
             var respBody = new tripListContainer();
             respBody.trips = (List<Trip>)result;
             return StatusCode((int)HttpStatusCode.OK, respBody);
+        }
+
+
+
+        [Authorize]
+        [HttpPut("/favorites/add/{tripId}")]
+        [ProducesResponseType(typeof(msgOnlyResp), 200)]
+        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<msgOnlyResp>> AddFavoriteTrip(int tripId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var trip = await tripRepository.GetTripAsync(tripId);
+            if (trip == null)
+            {
+                var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
+                return StatusCode((int)HttpStatusCode.NotFound, respBody);
+            }
+            user.favoriteTrips.Add(trip);
+            var result = await _userManager.UpdateAsync(user);
+            var resBody = new msgOnlyResp();
+            int statusCode;
+            if (result == null)
+            {
+                resBody.message = "Failure while trying to update trip.";
+                statusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            else
+            {
+                resBody.message = "Success.";
+                statusCode = (int)HttpStatusCode.OK;
+            }
+            return StatusCode(statusCode, resBody);
         }
     }
 }
