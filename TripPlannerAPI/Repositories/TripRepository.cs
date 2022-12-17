@@ -75,6 +75,12 @@ namespace TripPlannerAPI.Repositories
                 .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).ToListAsync();
         }
 
+        public async Task<IEnumerable<Trip>> GetFavoriteTrips(User usr)
+        {
+            User usrWithFavorites = await appDbContext.Users.Where(u => u.Id == usr.Id).Include(u=> u.favoriteTrips).FirstAsync();
+            return usrWithFavorites.favoriteTrips;
+        }
+
         public async Task<Trip> UpdateTripAsync(Trip trip)
         {
             var result = await appDbContext.Trips

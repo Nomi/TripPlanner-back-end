@@ -167,11 +167,11 @@ namespace TripPlannerAPI.Controllers
         [Authorize]
         [HttpGet("/my-favorites/all")]
         [ProducesResponseType(typeof(tripListContainer), 200)]
-        public async Task<ActionResult<msgOnlyResp>> GetFavoriteTrips(int tripId)
+        public async Task<ActionResult<msgOnlyResp>> GetFavoriteTrips()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             tripListContainer respBody = new tripListContainer();
-            respBody.trips = user.favoriteTrips;
+            respBody.trips = (List<Trip>) await tripRepository.GetFavoriteTrips(user);
             return StatusCode((int) HttpStatusCode.OK, respBody);
         }
     }
