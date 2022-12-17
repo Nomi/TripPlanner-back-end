@@ -133,7 +133,7 @@ namespace TripPlannerAPI.Controllers
 
 
         [Authorize]
-        [HttpPut("/favorites/add/{tripId}")]
+        [HttpPut("/my-favorites/add/{tripId}")]
         [ProducesResponseType(typeof(msgOnlyResp), 200)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.InternalServerError)]
@@ -161,6 +161,18 @@ namespace TripPlannerAPI.Controllers
                 statusCode = (int)HttpStatusCode.OK;
             }
             return StatusCode(statusCode, resBody);
+        }
+
+
+        [Authorize]
+        [HttpGet("/my-favorites/all")]
+        [ProducesResponseType(typeof(tripListContainer), 200)]
+        public async Task<ActionResult<msgOnlyResp>> GetFavoriteTrips(int tripId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            tripListContainer respBody = new tripListContainer();
+            respBody.trips = user.favoriteTrips;
+            return StatusCode((int) HttpStatusCode.OK, respBody);
         }
     }
 }
