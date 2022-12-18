@@ -15,6 +15,19 @@ namespace TripPlannerAPI.Models
         public DateTime date { get; set; }
         public string? type { get; set; }
 
+        [NotMapped]
+        public string startTime
+        {
+            get
+            {
+                if (date == DateTime.MinValue) //For normal DateTimes, if you don't initialize them at all then they will match DateTime.MinValue, because it is a value type rather than a reference type.
+                    return null;
+                return date.TimeOfDay.Hours.ToString() + ":"+date.TimeOfDay.Minutes.ToString();
+            }
+        }
+        public float totalTime { get; set; }
+        public String description { get; set; }
+        public float distance { get; set; }
         public List<Preference> preferences { get; set; }
         public List<Location> waypoints { get; set; }
         public List<User> members { get; set; }

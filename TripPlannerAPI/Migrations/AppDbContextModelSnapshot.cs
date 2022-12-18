@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "41bdac7d-8ea5-4abf-8fb3-8b50d6e0f920",
-                            ConcurrencyStamp = "e0c6ae49-1c51-4b6c-98b4-d2ccd0852ac7",
+                            Id = "1def388f-8765-4dd5-b87f-ea8ee3a7fe10",
+                            ConcurrencyStamp = "b9c2aaaf-a3cb-400a-9274-9aac8dc9c207",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "d1972911-a7f9-4f35-b7e4-f95c07333b30",
-                            ConcurrencyStamp = "255635f0-03b6-4a6b-bb88-183f732728e8",
+                            Id = "13a143a7-790f-4d83-8cb4-bc0b2af8298c",
+                            ConcurrencyStamp = "2e147e8f-d5f0-499e-8542-facf20003b62",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -261,6 +261,16 @@ namespace TripPlannerAPI.Migrations
                     b.Property<DateTime>("date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("distance")
+                        .HasColumnType("real");
+
+                    b.Property<float>("totalTime")
+                        .HasColumnType("real");
+
                     b.Property<string>("type")
                         .HasColumnType("nvarchar(max)");
 
@@ -304,6 +314,9 @@ namespace TripPlannerAPI.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<float>("OrganizerRating")
+                        .HasColumnType("real");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -322,6 +335,9 @@ namespace TripPlannerAPI.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<float>("UserRating")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
