@@ -81,7 +81,7 @@ namespace TripPlannerAPI.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)
+                userName = user.UserName
             };
         }
 
