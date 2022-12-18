@@ -140,13 +140,18 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<msgOnlyResp>> AddFavoriteTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            user.FavoriteTrips = (List<Trip>)await tripRepository.GetFavoriteTrips(user);
+            if(user.FavoriteTrips ==null)
+            {
+                user.FavoriteTrips = new List<Trip>();
+            }
             var trip = await tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
                 var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
-            user.favoriteTrips.Add(trip);
+            user.FavoriteTrips.Add(trip);
             var result = await _userManager.UpdateAsync(user);
             var resBody = new msgOnlyResp();
             int statusCode;

@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "47717ae9-08ca-445a-ae77-4adbba56773e",
-                            ConcurrencyStamp = "5d68ef2a-a7f4-4a71-9af7-a35571f21bd9",
+                            Id = "41bdac7d-8ea5-4abf-8fb3-8b50d6e0f920",
+                            ConcurrencyStamp = "e0c6ae49-1c51-4b6c-98b4-d2ccd0852ac7",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "717e5c60-6c46-4ff6-ac9d-55856359aa3c",
-                            ConcurrencyStamp = "e5d1ecf3-ea6b-42ae-b4b4-78b8dd0e6c26",
+                            Id = "d1972911-a7f9-4f35-b7e4-f95c07333b30",
+                            ConcurrencyStamp = "255635f0-03b6-4a6b-bb88-183f732728e8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -323,9 +323,6 @@ namespace TripPlannerAPI.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("tripId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -336,9 +333,37 @@ namespace TripPlannerAPI.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("tripId");
-
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("TripUser", b =>
+                {
+                    b.Property<int>("FavoriteTripstripId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FavoritedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FavoriteTripstripId", "FavoritedById");
+
+                    b.HasIndex("FavoritedById");
+
+                    b.ToTable("TripUser");
+                });
+
+            modelBuilder.Entity("TripUser1", b =>
+                {
+                    b.Property<int>("TripsJoinedtripId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("membersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TripsJoinedtripId", "membersId");
+
+                    b.HasIndex("membersId");
+
+                    b.ToTable("TripUser1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -426,26 +451,52 @@ namespace TripPlannerAPI.Migrations
             modelBuilder.Entity("TripPlannerAPI.Models.Trip", b =>
                 {
                     b.HasOne("TripPlannerAPI.Models.User", "creator")
-                        .WithMany()
+                        .WithMany("CreatedTrips")
                         .HasForeignKey("creatorId");
 
                     b.Navigation("creator");
                 });
 
-            modelBuilder.Entity("TripPlannerAPI.Models.User", b =>
+            modelBuilder.Entity("TripUser", b =>
                 {
                     b.HasOne("TripPlannerAPI.Models.Trip", null)
-                        .WithMany("members")
-                        .HasForeignKey("tripId");
+                        .WithMany()
+                        .HasForeignKey("FavoriteTripstripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TripPlannerAPI.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("FavoritedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TripUser1", b =>
+                {
+                    b.HasOne("TripPlannerAPI.Models.Trip", null)
+                        .WithMany()
+                        .HasForeignKey("TripsJoinedtripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TripPlannerAPI.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("membersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TripPlannerAPI.Models.Trip", b =>
                 {
-                    b.Navigation("members");
-
                     b.Navigation("preferences");
 
                     b.Navigation("waypoints");
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.User", b =>
+                {
+                    b.Navigation("CreatedTrips");
                 });
 #pragma warning restore 612, 618
         }
