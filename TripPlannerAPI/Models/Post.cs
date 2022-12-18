@@ -9,5 +9,6 @@ namespace TripPlannerAPI.Models
         public User Creator { get; set; }
         public Trip RelatedTrip { get; set; }
         public String Content { get; set; }
+        public DateTime CreationDateTime { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace TripPlannerAPI.Controllers
             post.Creator = user;
             post.RelatedTrip = trip;
             post.Content = _post.content;
+            post.CreationDateTime = DateTime.Now;
             var result = await postRepository.CreatePostAsync(post);
 
             var respBody = new msgOnlyResp();
@@ -64,7 +65,7 @@ namespace TripPlannerAPI.Controllers
         [ProducesResponseType(typeof(postsListWrapper), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Forbidden)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<msgOnlyResp>> GetAllPosts(int tripId)
+        public async Task<ActionResult<postsListWrapper>> GetAllPosts(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var trip = await tripRepository.GetTripAsync(tripId);

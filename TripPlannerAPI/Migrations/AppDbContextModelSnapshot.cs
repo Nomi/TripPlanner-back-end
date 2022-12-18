@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1def388f-8765-4dd5-b87f-ea8ee3a7fe10",
-                            ConcurrencyStamp = "b9c2aaaf-a3cb-400a-9274-9aac8dc9c207",
+                            Id = "996227a2-323b-44b9-b96e-51409183434d",
+                            ConcurrencyStamp = "fa40d865-454e-4c6e-9c3c-9de73a10f7ec",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "13a143a7-790f-4d83-8cb4-bc0b2af8298c",
-                            ConcurrencyStamp = "2e147e8f-d5f0-499e-8542-facf20003b62",
+                            Id = "9e456593-4367-40c2-84b4-a75288d98e58",
+                            ConcurrencyStamp = "a77b2e3d-f93d-48e3-98a5-e2c7518ef886",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -209,6 +209,9 @@ namespace TripPlannerAPI.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(450)");
