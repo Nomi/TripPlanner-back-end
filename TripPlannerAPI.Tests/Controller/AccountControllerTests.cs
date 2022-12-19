@@ -10,6 +10,11 @@ using TripPlannerAPI.Services;
 using TripPlannerAPI.Controllers;
 using TripPlannerAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Security.Principal;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace TripPlannerAPI.Tests.Controller
 {
@@ -51,6 +56,74 @@ namespace TripPlannerAPI.Tests.Controller
             ///Assert
             Assert.NotNull(result);
             Assert.Equal(token, result.Result.Value.Token);
+        }
+
+        [Fact]
+        public void AccountController_Login_ReturnsToken()
+        {
+            ///Arrange:
+            LoginDto loginDto = A.Fake<LoginDto>();
+            loginDto.UserName = "test";
+            loginDto.Password = "password";
+            //User user = A.Fake<User>();
+            //user.UserName = loginDto.UserName;
+            User user = new User { UserName = loginDto.UserName };
+            String token = "TestToken";
+            A.CallTo(() => _userManager.FindByNameAsync(loginDto.UserName)).Returns(user);
+            A.CallTo(() => _userManager.CheckPasswordAsync(user, loginDto.Password)).Returns(true);
+            A.CallTo(() => _tokenService.GenerateToken(A<User>.That.Matches(u => u.UserName == loginDto.UserName))).Returns(token);
+            var controller = new AccountController(_userManager, _tokenService);
+
+            ///Act:
+            var result = controller.Login(loginDto);
+            ///Assert:
+            Assert.NotNull(result);
+            Assert.Equal(token, result.Result.Value.Token);
+        }
+
+        [Fact]
+        public void AccountController_GetCurrentUserForAuthorizedUser_ReturnsUser()
+        {
+            ///Arrange:
+            var controller = new AccountController(_userManager, _tokenService);
+            String username = "test";
+            String email = "test@test.test";
+            User user = AuthorizeContext(controller, username);
+            user.Email = email;
+
+            //controller.ControllerContext = new ControllerContext();
+            //controller.ControllerContext.HttpContext = new DefaultHttpContext { User = fakeClaimsPrincipal };
+
+            //A.CallTo(() => fakeControllerContext.HttpContext).Returns(fakeHttpContext);
+            //A.CallTo(() => fakeHttpContext.User).Returns(fakePrincipal);
+            //A.CallTo(() => fakePrincipal.Identity).Returns(fakeIdentity);
+
+            A.CallTo(() => _userManager.FindByNameAsync(username)).Returns(user);
+
+            ///Act:
+            var result = controller.GetCurrentUser();
+            ///Assert:
+            Assert.NotNull(result);
+            Assert.Equal(email, result.Result.Value.Email);
+            Assert.Equal(username, result.Result.Value.userName);
+        }
+
+        private User AuthorizeContext(AccountController controller, string username)
+        {
+            var fakeClaimsPrincipal = A.Fake<ClaimsPrincipal>();
+            var fakeClaimsId = A.Fake<ClaimsIdentity>();
+            A.CallTo(() => fakeClaimsId.Name).Returns(username);
+            A.CallTo(() => fakeClaimsPrincipal.Identity).Returns(fakeClaimsId);
+
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            controller.ControllerContext.HttpContext = A.Fake<HttpContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(fakeClaimsPrincipal);
+
+            User user = A.Fake<User>();
+            user.UserName = username;
+            A.CallTo(() => _userManager.FindByNameAsync(username)).Returns(user);
+
+            return user;
         }
     }
 }
