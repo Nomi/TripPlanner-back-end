@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripPlannerAPI", "TripPlannerAPI\TripPlannerAPI.csproj", "{AE97D498-1DD8-4286-B1EF-F8C04E39B7BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripPlannerAPI.Tests", "TripPlannerAPI.Tests\TripPlannerAPI.Tests.csproj", "{FE63F871-F9A7-42B0-86B2-77CEBC5B1BDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripPlannerAPI.Tests", "TripPlannerAPI.Tests\TripPlannerAPI.Tests.csproj", "{4ED4F525-D189-4EEE-92D3-0989C434775B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{AE97D498-1DD8-4286-B1EF-F8C04E39B7BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE97D498-1DD8-4286-B1EF-F8C04E39B7BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE97D498-1DD8-4286-B1EF-F8C04E39B7BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE63F871-F9A7-42B0-86B2-77CEBC5B1BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE63F871-F9A7-42B0-86B2-77CEBC5B1BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE63F871-F9A7-42B0-86B2-77CEBC5B1BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE63F871-F9A7-42B0-86B2-77CEBC5B1BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED4F525-D189-4EEE-92D3-0989C434775B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED4F525-D189-4EEE-92D3-0989C434775B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED4F525-D189-4EEE-92D3-0989C434775B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED4F525-D189-4EEE-92D3-0989C434775B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,10 +14,10 @@ namespace TripPlannerAPI.Models
             OrganizerRating = 0;// Avg of all ratings as an organizer. //0 means unrated. Actual value is a float between 1 and 5 (inclusive of 1 and 5).
             UserRating = 0; //Avg of all ratings as a user.//0 means unreated. Actual value is a float between 1 and 5 (inclusive of 1 and 5).
             
-            //For frontend testing:
-            Random r = new Random();
-            OrganizerRating = (float)r.Next(0, 4) + (float)r.NextDouble();
-            UserRating = (float)r.Next(0, 4) + (float)r.NextDouble();
+            ////For frontend testing:
+            //Random r = new Random();
+            //OrganizerRating = (float)r.Next(0, 4) + (float)r.NextDouble();
+            //UserRating = (float)r.Next(0, 4) + (float)r.NextDouble();
         }
         public float OrganizerRating { get; set; }
         public float UserRating { get; set; }

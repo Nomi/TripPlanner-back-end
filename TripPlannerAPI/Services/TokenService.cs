@@ -7,7 +7,7 @@ using TripPlannerAPI.Models;
 
 namespace TripPlannerAPI.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
@@ -18,7 +18,7 @@ namespace TripPlannerAPI.Services
             _config = config;
         }
 
-        public async Task<string> GenerateToken(User user)
+        public virtual async Task<string> GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -27,7 +27,7 @@ namespace TripPlannerAPI.Services
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
@@ -43,7 +43,7 @@ namespace TripPlannerAPI.Services
                 signingCredentials: creds
                 );
 
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);  
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
     }
 }
