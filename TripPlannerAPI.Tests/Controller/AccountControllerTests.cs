@@ -20,7 +20,7 @@ namespace TripPlannerAPI.Tests.Controller
         public AccountControllerTests()
         {
             _userManager = A.Fake<UserManager<User>>();
-            _tokenService = A.Fake<TokenService>();
+            _tokenService = A.Fake<ITokenService>();
         }
 
 

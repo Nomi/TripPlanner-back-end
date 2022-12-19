@@ -4,6 +4,6 @@ namespace TripPlannerAPI.Services
 {
     public interface ITokenService
     {
-        Task<string> GenerateToken(User user);
+        public Task<string> GenerateToken(User user);
     }
 }

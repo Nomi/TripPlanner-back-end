@@ -18,7 +18,7 @@ namespace TripPlannerAPI.Services
             _config = config;
         }
 
-        public virtual async Task<string> GenerateToken(User user)
+        public async Task<string> GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
