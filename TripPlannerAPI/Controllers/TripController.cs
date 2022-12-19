@@ -20,15 +20,15 @@ namespace TripPlannerAPI.Controllers
     public class TripController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly ITripRepository tripRepository;
+        private readonly ITripRepository _tripRepository;
         public TripController(UserManager<User> userManager, ITripRepository tripRepository)
         {
             _userManager = userManager;
-            this.tripRepository = tripRepository;
+            this._tripRepository = tripRepository;
         }
 
 
-        public class tripInput 
+        public class TripInput
         { 
             public DateTime date { get; set; } 
             public string startTime { get; set; }
@@ -45,7 +45,7 @@ namespace TripPlannerAPI.Controllers
         [HttpPost("new")]
         [ProducesResponseType(typeof(msgOnlyResp), 201)]
         //[ProducesResponseType(typeof(string), 400)]
-        public async Task<ActionResult<msgOnlyResp>> CreateTrip(tripInput _trip)
+        public async Task<ActionResult<msgOnlyResp>> CreateTrip(TripInput _trip)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -61,7 +61,7 @@ namespace TripPlannerAPI.Controllers
             }
 
             
-            var result = await tripRepository.CreateTripAsync(trip);
+            var result = await _tripRepository.CreateTripAsync(trip);
 
             var respBody = new msgOnlyResp();
             respBody.message = "Success";
@@ -76,7 +76,7 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<tripListContainer>> GetAllTripsNotCreatorOrMemberOf()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var result = await tripRepository.GetTripsNotMemberOrCreatorAsync(user);
+            var result = await _tripRepository.GetTripsNotMemberOrCreatorAsync(user);
 
             var respBody = new tripListContainer();
             respBody.trips = (List<Trip>)result;
@@ -89,7 +89,7 @@ namespace TripPlannerAPI.Controllers
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Trip>> GetTrip(int tripId)
         { 
-            var result = await tripRepository.GetTripAsync(tripId);
+            var result = await _tripRepository.GetTripAsync(tripId);
             if (result == null)
             {
                 var respBody = new msgOnlyResp(); respBody.message = "Trip with given Id not found.";
@@ -105,14 +105,14 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<Trip>> JoinTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var trip = await tripRepository.GetTripAsync(tripId);
+            var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
                 var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
             trip.members.Add(user);
-            var result = await tripRepository.UpdateTripAsync(trip);
+            var result = await _tripRepository.UpdateTripAsync(trip);
             var resBody = new msgOnlyResp();
             resBody.message = "Success.";
             int statusCode = (int)HttpStatusCode.OK;
@@ -140,7 +140,7 @@ namespace TripPlannerAPI.Controllers
             }
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             List<string> args = queryParam.Split('-').ToList();
-            var result = await tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
+            var result = await _tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
 
             var respBody = new tripListContainer();
             respBody.trips = (List<Trip>)result;
@@ -157,12 +157,12 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<msgOnlyResp>> AddFavoriteTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            user.FavoriteTrips = (List<Trip>)await tripRepository.GetFavoriteTrips(user);
+            user.FavoriteTrips = (List<Trip>)await _tripRepository.GetFavoriteTrips(user);
             if(user.FavoriteTrips ==null)
             {
                 user.FavoriteTrips = new List<Trip>();
             }
-            var trip = await tripRepository.GetTripAsync(tripId);
+            var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
                 var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
@@ -193,7 +193,7 @@ namespace TripPlannerAPI.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             tripListContainer respBody = new tripListContainer();
-            respBody.trips = (List<Trip>) await tripRepository.GetFavoriteTrips(user);
+            respBody.trips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
             return StatusCode((int) HttpStatusCode.OK, respBody);
         }
     }

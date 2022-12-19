@@ -15,26 +15,26 @@ namespace TripPlannerAPI.Controllers
     public class PostController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly ITripRepository tripRepository;
-        private readonly IPostRepository postRepository;
+        private readonly ITripRepository _tripRepository;
+        private readonly IPostRepository _postRepository;
         public PostController(UserManager<User> userManager, ITripRepository tripRepository, IPostRepository postRepository)
         {
             _userManager = userManager;
-            this.tripRepository = tripRepository;
-            this.postRepository = postRepository;
+            this._tripRepository = tripRepository;
+            this._postRepository = postRepository;
         }
 
 
-        public class postInput { public String content { get; set; } }
+        public class PostInput { public String content { get; set; } }
         [Authorize]
         [HttpPost("trip/{tripId}")]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Forbidden)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<msgOnlyResp>> CreateTrip(int tripId, postInput _post)
+        public async Task<ActionResult<msgOnlyResp>> CreatePost(int tripId, PostInput _post)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var trip = await tripRepository.GetTripAsync(tripId);
+            var trip = await _tripRepository.GetTripAsync(tripId);
             if(trip==null)
             {
                 msgOnlyResp wrongTripIdMsgBody = new();
@@ -52,7 +52,7 @@ namespace TripPlannerAPI.Controllers
             post.RelatedTrip = trip;
             post.Content = _post.content;
             post.CreationDateTime = DateTime.Now;
-            var result = await postRepository.CreatePostAsync(post);
+            var result = await _postRepository.CreatePostAsync(post);
 
             var respBody = new msgOnlyResp();
             respBody.message = "Success";
@@ -68,7 +68,7 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<postsListWrapper>> GetAllPosts(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var trip = await tripRepository.GetTripAsync(tripId);
+            var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
                 msgOnlyResp errorMsgBody = new();
@@ -81,7 +81,7 @@ namespace TripPlannerAPI.Controllers
                 errorMsgBody.message = "You need to be a member or a creator of the trip to see related posts.";
                 return StatusCode((int)HttpStatusCode.Forbidden, errorMsgBody);
             }
-            var result = await postRepository.GetPostsAsync(tripId);
+            var result = await _postRepository.GetPostsAsync(tripId);
             var respBody = new postsListWrapper();
             respBody.posts = (List<PostDTO>)result;
             return StatusCode((int)HttpStatusCode.OK, respBody);
