@@ -10,15 +10,14 @@ env:
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: TripPlannerAPI
 jobs:
-  getdir:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: GetPWD
-      run: echo "${{ env.WORKING_DIRECTORY }}"
+  # getdir:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: GetPWD
+  #     run: echo "${{ env.WORKING_DIRECTORY }}"
       
-      
-  build:
+  build-and-test:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,11 +26,11 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test --no-restore --verbosity normal
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
@@ -39,9 +38,14 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  # test:
+  #   runs-on: windows-latest
+  #   needs: build
+  #   uses: actions/setup-dotnet@v1
   deploy:
     runs-on: windows-latest
-    needs: build
+    needs: build-and-test
     steps:
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
