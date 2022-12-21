@@ -44,6 +44,7 @@ jobs:
   #   needs: build
   #   uses: actions/setup-dotnet@v1
   deploy:
+    name: deploy
     runs-on: windows-latest
     needs: build-and-test
     steps:
