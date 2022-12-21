@@ -31,7 +31,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Making test logging prettier
-      run: dotnet add ${{ TESTS_PROJECT_NAME }} package PrettierTestLogger
+      run: dotnet add "${{ TESTS_PROJECT_NAME }}"" package PrettierTestLogger
     - name: Test
       run: dotnet test --logger prettier --no-build --verbosity quiet
     - name: Publish
