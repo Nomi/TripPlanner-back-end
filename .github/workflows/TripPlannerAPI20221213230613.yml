@@ -9,6 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: TripPlannerAPI
+  TESTS_PROJECT_NAME: TripPlannerAPI.Tests
 jobs:
   # getdir:
   #   runs-on: windows-latest
@@ -29,8 +30,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Making test logging prettier
+      run: dotnet add ${{ TESTS_PROJECT_NAME }} package PrettierTestLogger
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --logger prettier --no-build --verbosity quiet
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
