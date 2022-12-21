@@ -9,8 +9,16 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: TripPlannerAPI
+  TESTS_PROJECT_NAME: TripPlannerAPI.Tests
 jobs:
-  build:
+  # getdir:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: GetPWD
+  #     run: echo "${{ env.WORKING_DIRECTORY }}"
+      
+  build-and-test:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,11 +27,13 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Making test logging prettier
+      run: dotnet add "${{ env.TESTS_PROJECT_NAME }}" package PrettierTestLogger
     - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test --logger prettier --no-build --verbosity quiet
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
@@ -31,9 +41,16 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  # test:
+  #   runs-on: windows-latest
+  #   needs: build
+  #   uses: actions/setup-dotnet@v1
   deploy:
+    name: deploy
+    environment: production
     runs-on: windows-latest
-    needs: build
+    needs: build-and-test
     steps:
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
