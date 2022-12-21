@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Web App TripPlannerAPI20221213230613
+name: Build and deploy .NET Core application to Azure Web App TripPlannerAPI20221213230613
 on:
   push:
     branches:
@@ -48,7 +48,7 @@ jobs:
     name: deploy
     environment: 
       name: production
-      url: https://tripplannerapi20221213230613.azurewebsites.net/swagger/index.html
+      url: https://tripplannerapi20221213230613.azurewebsites.net/swagger
     runs-on: windows-latest
     needs: build-and-test
     steps:
