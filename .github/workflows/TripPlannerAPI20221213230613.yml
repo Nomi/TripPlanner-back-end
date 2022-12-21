@@ -46,7 +46,9 @@ jobs:
   #   uses: actions/setup-dotnet@v1
   deploy:
     name: deploy
-    environment: production
+    environment: 
+      name: production
+      url: tripplannerapi20221213230613.azurewebsites.net/swagger
     runs-on: windows-latest
     needs: build-and-test
     steps:
