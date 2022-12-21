@@ -44,11 +44,11 @@ jobs:
   #   runs-on: windows-latest
   #   needs: build
   #   uses: actions/setup-dotnet@v1
-  deploy:
+  deployment:
     name: deploy
     environment: 
       name: production
-      url: tripplannerapi20221213230613.azurewebsites.net/swagger
+      url: https://tripplannerapi20221213230613.azurewebsites.net/swagger/index.html
     runs-on: windows-latest
     needs: build-and-test
     steps:
