@@ -61,6 +61,9 @@ namespace TripPlannerAPI.DTOs
             waypoints = trip.waypoints;
             preferences = trip.preferences;
 
+            creator = new UserDto(usr);
+            members = trip.members.Select(u => new UserDto(u)).ToList();
+
             isJoinedByCurrentUser = trip.members.Any(u => u.Id == usr.Id);
             isFavoriteForCurrentUser = _isFavoriteForCurrentUser;
         }
