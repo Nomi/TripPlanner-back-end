@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Web App TripPlannerAPI20221213230613
+name: Build and deploy .NET Core application to Azure Web App TripPlannerAPI20221213230613
 on:
   push:
     branches:
@@ -30,8 +30,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Making test logging prettier
-      run: dotnet add "${{ env.TESTS_PROJECT_NAME }}" package PrettierTestLogger
     - name: Test
       run: dotnet test --logger prettier --no-build --verbosity quiet
     - name: Publish
@@ -46,9 +44,11 @@ jobs:
   #   runs-on: windows-latest
   #   needs: build
   #   uses: actions/setup-dotnet@v1
-  deploy:
+  deployment:
     name: deploy
-    environment: production
+    environment: 
+      name: production
+      url: https://tripplannerapi20221213230613.azurewebsites.net/swagger
     runs-on: windows-latest
     needs: build-and-test
     steps:
