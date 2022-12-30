@@ -18,7 +18,7 @@ namespace TripPlannerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TripController : ControllerBase
+    public partial class TripController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly ITripRepository _tripRepository;
@@ -40,7 +40,6 @@ namespace TripPlannerAPI.Controllers
             public List<String> preferences { get; set; }
             public List<Location> waypoints { get; set; } 
         }
-        public class msgOnlyResp { public string message { get; set; } }
 
         [Authorize]
         [HttpPost("new")]
