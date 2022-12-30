@@ -39,7 +39,10 @@ namespace TripPlannerAPI.Repositories
 
         public async Task<Trip> GetTripAsync(int id)
         {
-            return await appDbContext.Trips.Where(t=>t.tripId == id).Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x=>x.preferences).FirstOrDefaultAsync(t => t.tripId == id);
+            return await appDbContext.Trips.Where(t=>t.tripId == id)
+                .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints)
+                .Include(x=>x.preferences).Include(x=>x.FavoritedBy)
+                .FirstOrDefaultAsync(t => t.tripId == id);
         }
         public async Task<IEnumerable<Trip>> GetTripsAsync()
         {
@@ -66,13 +69,15 @@ namespace TripPlannerAPI.Repositories
                 isFromTimePeriod = (t => t.date <= DateTime.Now);
             }
             return await appDbContext.Trips.Where(isRelated).Where(isFromTimePeriod)
-                .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences)
+                .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints)
+                .Include(x => x.preferences).Include(x => x.FavoritedBy)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Trip>> GetTripsNotMemberOrCreatorAsync(User usr)
         {
             return await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id)))
-                .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).ToListAsync();
+                .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).Include(x=>x.FavoritedBy)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Trip>> GetFavoriteTrips(User usr)

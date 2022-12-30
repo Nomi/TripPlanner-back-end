@@ -12,6 +12,11 @@ namespace TripPlannerAPI.Controllers
 {
     public class LoginResponse { public string Token { get; set; } }
     public class GetUserResponse { public string username { get; set; } }
+    public class UserMiniDto
+    {
+        public string Email { get; set; }
+        public string userName { get; set; }
+    }
 
     [Route("api/[controller]")]
     [ApiController]
@@ -70,15 +75,15 @@ namespace TripPlannerAPI.Controllers
 
         [Authorize]
         [HttpGet("current_user")]
-        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(typeof(UserMiniDto), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         [ProducesResponseType(typeof(NotFoundResult), 404)]
-        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        public async Task<ActionResult<UserMiniDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
                 return NotFound();
-            return new UserDto
+            return new UserMiniDto
             {
                 Email = user.Email,
                 userName = user.UserName

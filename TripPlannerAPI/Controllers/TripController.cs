@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.CodeDom;
+using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
@@ -29,7 +30,7 @@ namespace TripPlannerAPI.Controllers
 
 
         public class TripInput
-        { 
+        {
             public DateTime date { get; set; } 
             public string startTime { get; set; }
             public float totalTime { get; set; }
@@ -53,7 +54,7 @@ namespace TripPlannerAPI.Controllers
             String[] splitStartTime = _trip.startTime.Split(":");
             DateTime dt = new DateTime(_trip.date.Year, _trip.date.Month, _trip.date.Day, int.Parse(splitStartTime[0]), int.Parse(splitStartTime[1]), 0, _trip.date.Kind);
 
-            var trip = new Trip { type = _trip.type, date = dt, creator = user, members = new List<User>(), waypoints = _trip.waypoints, description=_trip.description, distance = _trip.distance, totalTime = _trip.totalTime };
+            var trip = new Trip { type = _trip.type, date = dt, creator = user, members = new List<User>(), waypoints = _trip.waypoints, description=_trip.description, distance = _trip.distance, totalTime = _trip.totalTime, creationDateTime=DateTime.Now };
             trip.preferences = new List<Preference>();
             for (int i = 0; i < _trip.preferences.Count(); i++)
             {
@@ -69,17 +70,17 @@ namespace TripPlannerAPI.Controllers
         }
 
 
-        public class tripListContainer { public List<Trip> trips { get; set; } }
+        public class tripListContainer { public List<TripDto> trips { get; set; } }
         [Authorize]
         [HttpGet("all")]
-        [ProducesResponseType(typeof(List<Trip>), 200)]
+        [ProducesResponseType(typeof(tripListContainer), 200)]
         public async Task<ActionResult<tripListContainer>> GetAllTripsNotCreatorOrMemberOf()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var result = await _tripRepository.GetTripsNotMemberOrCreatorAsync(user);
 
             var respBody = new tripListContainer();
-            respBody.trips = (List<Trip>)result;
+            respBody.trips = ((List<Trip>)result).Select(t => new TripDto(t, user)).ToList();
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }
 
@@ -88,14 +89,15 @@ namespace TripPlannerAPI.Controllers
         [ProducesResponseType(typeof(Trip), 200)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Trip>> GetTrip(int tripId)
-        { 
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var result = await _tripRepository.GetTripAsync(tripId);
             if (result == null)
             {
                 var respBody = new msgOnlyResp(); respBody.message = "Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
-            return StatusCode((int)HttpStatusCode.OK, result);
+            return StatusCode((int)HttpStatusCode.OK, new TripDto(result,user));
         }
         [Authorize]
         [HttpPost("all/{tripId}/join")]
@@ -143,7 +145,7 @@ namespace TripPlannerAPI.Controllers
             var result = await _tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
 
             var respBody = new tripListContainer();
-            respBody.trips = (List<Trip>)result;
+            respBody.trips = ((List<Trip>)result).Select(t => new TripDto(t, user)).ToList();
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }
 
@@ -193,7 +195,8 @@ namespace TripPlannerAPI.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             tripListContainer respBody = new tripListContainer();
-            respBody.trips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
+            var favTrips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
+            respBody.trips = ((List<Trip>)favTrips).Select(t => new TripDto(t, user, true)).ToList();
             return StatusCode((int) HttpStatusCode.OK, respBody);
         }
     }

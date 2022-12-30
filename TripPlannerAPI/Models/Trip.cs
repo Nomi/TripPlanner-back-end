@@ -13,6 +13,8 @@ namespace TripPlannerAPI.Models
         [Key]
         public int tripId { get; set; }
         public DateTime date { get; set; }
+
+        public DateTime creationDateTime { get; set; }
         public string? type { get; set; }
 
         [NotMapped]

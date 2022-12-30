@@ -87,7 +87,7 @@ namespace TripPlannerAPI.Tests.Controller
 
 
             A.CallTo(() => _tripRepository.GetTripsNotMemberOrCreatorAsync(user)).Returns(new List<Trip>());
-
+            A.CallTo(()=> _tripRepository.GetFavoriteTrips(user)).Returns(new List<Trip>());
             ///Act:
             var result = controller.GetAllTripsNotCreatorOrMemberOf();
             ObjectResult objRes = (ObjectResult)result.Result.Result;
@@ -110,6 +110,7 @@ namespace TripPlannerAPI.Tests.Controller
 
 
             A.CallTo(() => _tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user)).Returns(new List<Trip>());
+            A.CallTo(() => _tripRepository.GetFavoriteTrips(user)).Returns(new List<Trip>());
 
             ///Act:
             var result = controller.GetTripsByQueryParam(queryParam);
