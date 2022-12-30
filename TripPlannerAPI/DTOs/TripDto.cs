@@ -12,6 +12,8 @@ namespace TripPlannerAPI.DTOs
 
         public bool? isFavoriteForCurrentUser { get; set; }
         public bool? isJoinedByCurrentUser { get; set; }
+
+        public bool? isCreatedByCurrentUser { get; set; }
         public string? type { get; set; }
 
         public string startTime
@@ -54,6 +56,7 @@ namespace TripPlannerAPI.DTOs
             members = trip.members.Select(u => new UserDto(u)).ToList();
             
             isJoinedByCurrentUser = trip.members.Any(u=> u.Id==usr.Id);
+            isCreatedByCurrentUser = (trip.creator.Id == usr.Id);
             isFavoriteForCurrentUser = trip.FavoritedBy?.Any(u=> u.Id == usr.Id);
         }
 
@@ -72,6 +75,7 @@ namespace TripPlannerAPI.DTOs
             members = trip.members.Select(u => new UserDto(u)).ToList();
 
             isJoinedByCurrentUser = trip.members.Any(u => u.Id == usr.Id);
+            isCreatedByCurrentUser = (trip.creator.Id == usr.Id);
             isFavoriteForCurrentUser = _isFavoriteForCurrentUser;
         }
     }
