@@ -83,6 +83,9 @@ namespace TripPlannerAPI.Repositories
         public async Task<IEnumerable<Trip>> GetFavoriteTrips(User usr)
         {
             User usrWithFavorites = await appDbContext.Users.Where(u => u.Id == usr.Id)
+                .Include(u => (u as User).FavoriteTrips)
+                    .ThenInclude(t => t.creator)
+                        .ThenInclude(m => m.UserName)
                 .Include(u=> (u as User).FavoriteTrips)
                     .ThenInclude(t=>t.members)
                         .ThenInclude(m => m.UserName)
