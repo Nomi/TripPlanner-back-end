@@ -86,7 +86,7 @@ namespace TripPlannerAPI.Controllers
 
         [Authorize]
         [HttpGet("all/{tripId}")]
-        [ProducesResponseType(typeof(Trip), 200)]
+        [ProducesResponseType(typeof(TripDto), 200)]
         [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Trip>> GetTrip(int tripId)
         {
