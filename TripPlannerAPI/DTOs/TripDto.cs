@@ -20,7 +20,13 @@ namespace TripPlannerAPI.DTOs
             {
                 if (date == DateTime.MinValue) //For normal DateTimes, if you don't initialize them at all then they will match DateTime.MinValue, because it is a value type rather than a reference type.
                     return null;
-                return date.TimeOfDay.Hours.ToString() + ":" + date.TimeOfDay.Minutes.ToString();
+                string prefixHrs = "";
+                if (date.TimeOfDay.Hours < 10)
+                    prefixHrs = "0";
+                string prefixMins = "";
+                if (date.TimeOfDay.Minutes < 10)
+                    prefixMins = "0";
+                return prefixHrs + date.TimeOfDay.Hours.ToString() + ":" + prefixMins +date.TimeOfDay.Minutes.ToString();
             }
         }
         public float totalTime { get; set; }
@@ -38,6 +44,7 @@ namespace TripPlannerAPI.DTOs
             creationDateTime = trip.creationDateTime;
             type = trip.type;
             totalTime = trip.totalTime;
+            distance = trip.distance;
             description = trip.description;
             waypoints = trip.waypoints;
             preferences = trip.preferences;
