@@ -86,7 +86,7 @@ namespace TripPlannerAPI.Tests.Controller
             User user = AuthorizeContext(controller, username);
 
 
-            A.CallTo(() => _tripRepository.GetTripsNotMemberOrCreatorAsync(user)).Returns(new List<Trip>());
+            A.CallTo(() => _tripRepository.GetCurrentOrFutureTripsNotMemberOrCreatorAsync(user)).Returns(new List<Trip>());
             A.CallTo(()=> _tripRepository.GetFavoriteTrips(user)).Returns(new List<Trip>());
             ///Act:
             var result = controller.GetAllTripsNotCreatorOrMemberOf();

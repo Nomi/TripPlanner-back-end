@@ -73,9 +73,9 @@ namespace TripPlannerAPI.Repositories
                 .Include(x => x.preferences).Include(x => x.FavoritedBy)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Trip>> GetTripsNotMemberOrCreatorAsync(User usr)
+        public async Task<IEnumerable<Trip>> GetCurrentOrFutureTripsNotMemberOrCreatorAsync(User usr)
         {
-            return await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id)))
+            return await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id) && t.date<=DateTime.Today.AddDays(-1)))
                 .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).Include(x=>x.FavoritedBy)
                 .ToListAsync();
         }

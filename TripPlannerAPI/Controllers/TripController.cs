@@ -77,7 +77,7 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<tripListContainer>> GetAllTripsNotCreatorOrMemberOf()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var result = await _tripRepository.GetTripsNotMemberOrCreatorAsync(user);
+            var result = await _tripRepository.GetCurrentOrFutureTripsNotMemberOrCreatorAsync(user);
 
             var respBody = new tripListContainer();
             respBody.trips = ((List<Trip>)result).Select(t => new TripDto(t, user)).ToList();
