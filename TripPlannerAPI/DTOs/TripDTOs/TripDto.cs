@@ -1,14 +1,15 @@
 ﻿using TripPlannerAPI.Controllers;
+using TripPlannerAPI.DTOs.AccountDTOs;
 using TripPlannerAPI.Models;
 
-namespace TripPlannerAPI.DTOs
+namespace TripPlannerAPI.DTOs.TripDTOs
 {
     public class TripDto
     {
         public int tripId { get; set; }
         public DateTime date { get; set; }
 
-        public DateTime creationDateTime { get; set; } 
+        public DateTime creationDateTime { get; set; }
 
         public bool? isFavoriteForCurrentUser { get; set; }
         public bool? isJoinedByCurrentUser { get; set; }
@@ -28,18 +29,18 @@ namespace TripPlannerAPI.DTOs
                 string prefixMins = "";
                 if (date.TimeOfDay.Minutes < 10)
                     prefixMins = "0";
-                return prefixHrs + date.TimeOfDay.Hours.ToString() + ":" + prefixMins +date.TimeOfDay.Minutes.ToString();
+                return prefixHrs + date.TimeOfDay.Hours.ToString() + ":" + prefixMins + date.TimeOfDay.Minutes.ToString();
             }
         }
         public float totalTime { get; set; }
-        public String description { get; set; }
+        public string description { get; set; }
         public float distance { get; set; }
         public List<Preference> preferences { get; set; }
         public List<Location> waypoints { get; set; }
         public List<UserDto> members { get; set; }
         public UserDto creator { get; set; }
 
-        public TripDto(Trip trip,User usr)
+        public TripDto(Trip trip, User usr)
         {
             tripId = trip.tripId;
             date = trip.date;
@@ -54,10 +55,10 @@ namespace TripPlannerAPI.DTOs
 
             creator = new UserDto(usr);
             members = trip.members.Select(u => new UserDto(u)).ToList();
-            
-            isJoinedByCurrentUser = trip.members.Any(u=> u.Id==usr.Id);
-            isCreatedByCurrentUser = (trip.creator.Id == usr.Id);
-            isFavoriteForCurrentUser = trip.FavoritedBy?.Any(u=> u.Id == usr.Id);
+
+            isJoinedByCurrentUser = trip.members.Any(u => u.Id == usr.Id);
+            isCreatedByCurrentUser = trip.creator.Id == usr.Id;
+            isFavoriteForCurrentUser = trip.FavoritedBy?.Any(u => u.Id == usr.Id);
         }
 
         public TripDto(Trip trip, User usr, bool _isFavoriteForCurrentUser)
@@ -75,7 +76,7 @@ namespace TripPlannerAPI.DTOs
             members = trip.members.Select(u => new UserDto(u)).ToList();
 
             isJoinedByCurrentUser = trip.members.Any(u => u.Id == usr.Id);
-            isCreatedByCurrentUser = (trip.creator.Id == usr.Id);
+            isCreatedByCurrentUser = trip.creator.Id == usr.Id;
             isFavoriteForCurrentUser = _isFavoriteForCurrentUser;
         }
     }

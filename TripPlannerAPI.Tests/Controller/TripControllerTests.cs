@@ -42,7 +42,7 @@ namespace TripPlannerAPI.Tests.Controller
             var controller = new TripController(_userManager, _tripRepository);
             User user = AuthorizeContext(controller, username);
 
-            var fakeTripInput = A.Fake<TripInput>();
+            var fakeTripInput = A.Fake<TripInputDto>();
             //fakeTripInput.date= DateTime.Now;
             //fakeTripInput.distance = 20;
             fakeTripInput.preferences = new List<string>() { "History", "Entertainment", "Sightseeing" };
@@ -95,7 +95,7 @@ namespace TripPlannerAPI.Tests.Controller
             ///Assert:
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, objRes.StatusCode);
-            Assert.Equal(0,((tripListContainer)objRes.Value).trips.Count);
+            Assert.Equal(0,((TripListContainer)objRes.Value).trips.Count);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace TripPlannerAPI.Tests.Controller
             ///Assert:
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, objRes.StatusCode);
-            Assert.Equal(0, ((tripListContainer)objRes.Value).trips.Count);
+            Assert.Equal(0, ((TripListContainer)objRes.Value).trips.Count);
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace TripPlannerAPI.Tests.Controller
             ///Assert:
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, objRes.StatusCode);
-            Assert.Equal(0, ((tripListContainer)objRes.Value).trips.Count);
+            Assert.Equal(0, ((TripListContainer)objRes.Value).trips.Count);
         }
 
         [Fact]

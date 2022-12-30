@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using TripPlannerAPI.DTOs;
+using TripPlannerAPI.DTOs.PostDTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Repositories;
 using static TripPlannerAPI.Controllers.TripController;
@@ -23,27 +23,24 @@ namespace TripPlannerAPI.Controllers
             this._tripRepository = tripRepository;
             this._postRepository = postRepository;
         }
-
-
-        public class PostInput { public String content { get; set; } }
         [Authorize]
         [HttpPost("trip/{tripId}")]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<msgOnlyResp>> CreatePost(int tripId, PostInput _post)
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<MsgOnlyResp>> CreatePost(int tripId, PostInputDto _post)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var trip = await _tripRepository.GetTripAsync(tripId);
             if(trip==null)
             {
-                msgOnlyResp wrongTripIdMsgBody = new();
+                MsgOnlyResp wrongTripIdMsgBody = new();
                 wrongTripIdMsgBody.message = "No trip corresponding to provided tripId could be found.";
                 return StatusCode((int)HttpStatusCode.BadRequest, wrongTripIdMsgBody);
             }
             if (trip.creator.Id != user.Id && !trip.members.Any(u => u.Id == user.Id))
             {
-                msgOnlyResp errorMsgBody = new();
+                MsgOnlyResp errorMsgBody = new();
                 errorMsgBody.message = "You need to be a member or a creator of the trip to create related posts.";
                 return StatusCode((int)HttpStatusCode.Forbidden, errorMsgBody);
             }
@@ -54,35 +51,33 @@ namespace TripPlannerAPI.Controllers
             post.CreationDateTime = DateTime.Now;
             var result = await _postRepository.CreatePostAsync(post);
 
-            var respBody = new msgOnlyResp();
+            var respBody = new MsgOnlyResp();
             respBody.message = "Success";
             return StatusCode((int)HttpStatusCode.Created, respBody);
         }
-
-        public class postsListWrapper { public List<PostDTO> posts { get; set; } }
         [Authorize]
         [HttpGet("trip/{tripId}")]
-        [ProducesResponseType(typeof(postsListWrapper), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<postsListWrapper>> GetAllPosts(int tripId)
+        [ProducesResponseType(typeof(postsListWrapperDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<postsListWrapperDto>> GetAllPosts(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
-                msgOnlyResp errorMsgBody = new();
+                MsgOnlyResp errorMsgBody = new();
                 errorMsgBody.message = "No trip corresponding to provided tripId could be found.";
                 return StatusCode((int)HttpStatusCode.BadRequest, errorMsgBody);
             }
             if (trip.creator.Id != user.Id && !trip.members.Any(u => u.Id == user.Id))
             {
-                msgOnlyResp errorMsgBody = new();
+                MsgOnlyResp errorMsgBody = new();
                 errorMsgBody.message = "You need to be a member or a creator of the trip to see related posts.";
                 return StatusCode((int)HttpStatusCode.Forbidden, errorMsgBody);
             }
             var result = await _postRepository.GetPostsAsync(tripId);
-            var respBody = new postsListWrapper();
+            var respBody = new postsListWrapperDto();
             respBody.posts = (List<PostDTO>)result;
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }

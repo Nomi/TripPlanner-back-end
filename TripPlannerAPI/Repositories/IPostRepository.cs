@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TripPlannerAPI.Data;
-using TripPlannerAPI.DTOs;
+using TripPlannerAPI.DTOs.PostDTOs;
 using TripPlannerAPI.Models;
 
 namespace TripPlannerAPI.Repositories

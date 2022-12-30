@@ -1,4 +1,4 @@
-﻿namespace TripPlannerAPI.DTOs
+﻿namespace TripPlannerAPI.DTOs.AccountDTOs
 {
     public class LoginDto
     {

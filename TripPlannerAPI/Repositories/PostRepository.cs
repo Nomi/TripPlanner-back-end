@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using TripPlannerAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
-using TripPlannerAPI.DTOs;
 using System.Reflection.Metadata.Ecma335;
 using System;
+using TripPlannerAPI.DTOs.PostDTOs;
 
 namespace TripPlannerAPI.Repositories
 {

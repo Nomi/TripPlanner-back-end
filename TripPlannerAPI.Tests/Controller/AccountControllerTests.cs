@@ -8,13 +8,13 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Identity;
 using TripPlannerAPI.Services;
 using TripPlannerAPI.Controllers;
-using TripPlannerAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Principal;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using TripPlannerAPI.DTOs.AccountDTOs;
 
 namespace TripPlannerAPI.Tests.Controller
 {

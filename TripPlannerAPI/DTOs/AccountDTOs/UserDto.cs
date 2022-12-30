@@ -1,6 +1,6 @@
 ﻿using TripPlannerAPI.Models;
 
-namespace TripPlannerAPI.DTOs
+namespace TripPlannerAPI.DTOs.AccountDTOs
 {
     public class UserDto
     {
@@ -16,6 +16,6 @@ namespace TripPlannerAPI.DTOs
             OrganizerRating = user.OrganizerRating;
             UserRating = user.UserRating;
         }
-        
+
     }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
-using TripPlannerAPI.DTOs;
+using TripPlannerAPI.DTOs.TripDTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Repositories;
 using TripPlannerAPI.Services;
@@ -18,7 +18,7 @@ namespace TripPlannerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public partial class TripController : ControllerBase
+    public class TripController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly ITripRepository _tripRepository;
@@ -28,24 +28,11 @@ namespace TripPlannerAPI.Controllers
             this._tripRepository = tripRepository;
         }
 
-
-        public class TripInput
-        {
-            public DateTime date { get; set; } 
-            public string startTime { get; set; }
-            public float totalTime { get; set; }
-            public String description { get; set; }
-            public float distance { get; set; }
-            public String type { get; set; } 
-            public List<String> preferences { get; set; }
-            public List<Location> waypoints { get; set; } 
-        }
-
         [Authorize]
         [HttpPost("new")]
-        [ProducesResponseType(typeof(msgOnlyResp), 201)]
+        [ProducesResponseType(typeof(MsgOnlyResp), 201)]
         //[ProducesResponseType(typeof(string), 400)]
-        public async Task<ActionResult<msgOnlyResp>> CreateTrip(TripInput _trip)
+        public async Task<ActionResult<MsgOnlyResp>> CreateTrip(TripInputDto _trip)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -63,22 +50,19 @@ namespace TripPlannerAPI.Controllers
             
             var result = await _tripRepository.CreateTripAsync(trip);
 
-            var respBody = new msgOnlyResp();
+            var respBody = new MsgOnlyResp();
             respBody.message = "Success";
             return StatusCode((int)HttpStatusCode.Created, respBody);
         }
-
-
-        public class tripListContainer { public List<TripDto> trips { get; set; } }
         [Authorize]
         [HttpGet("all")]
-        [ProducesResponseType(typeof(tripListContainer), 200)]
-        public async Task<ActionResult<tripListContainer>> GetAllTripsNotCreatorOrMemberOf()
+        [ProducesResponseType(typeof(TripListContainer), 200)]
+        public async Task<ActionResult<TripListContainer>> GetAllTripsNotCreatorOrMemberOf()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var result = await _tripRepository.GetCurrentOrFutureTripsNotMemberOrCreatorAsync(user);
 
-            var respBody = new tripListContainer();
+            var respBody = new TripListContainer();
             respBody.trips = ((List<Trip>)result).Select(t => new TripDto(t, user)).ToList();
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }
@@ -86,35 +70,35 @@ namespace TripPlannerAPI.Controllers
         [Authorize]
         [HttpGet("all/{tripId}")]
         [ProducesResponseType(typeof(TripDto), 200)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Trip>> GetTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var result = await _tripRepository.GetTripAsync(tripId);
             if (result == null)
             {
-                var respBody = new msgOnlyResp(); respBody.message = "Trip with given Id not found.";
+                var respBody = new MsgOnlyResp(); respBody.message = "Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
             return StatusCode((int)HttpStatusCode.OK, new TripDto(result,user));
         }
         [Authorize]
         [HttpPost("all/{tripId}/join")]
-        [ProducesResponseType(typeof(msgOnlyResp), 200)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(MsgOnlyResp), 200)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<Trip>> JoinTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
-                var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
+                var respBody = new MsgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
             trip.members.Add(user);
             var result = await _tripRepository.UpdateTripAsync(trip);
-            var resBody = new msgOnlyResp();
+            var resBody = new MsgOnlyResp();
             resBody.message = "Success.";
             int statusCode = (int)HttpStatusCode.OK;
             if(result==null)
@@ -128,14 +112,14 @@ namespace TripPlannerAPI.Controllers
         internal List<String> possibleQueryParams = new List<string>() { "created-future", "created-past", "joined-future", "joined-past" };
         [Authorize]
         [HttpGet("my-trips/{queryParam}")]
-        [ProducesResponseType(typeof(tripListContainer), 200)]
-        [ProducesResponseType(typeof(msgOnlyResp),(int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<tripListContainer>> GetTripsByQueryParam(string queryParam)
+        [ProducesResponseType(typeof(TripListContainer), 200)]
+        [ProducesResponseType(typeof(MsgOnlyResp),(int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<TripListContainer>> GetTripsByQueryParam(string queryParam)
         {
             
             if (!possibleQueryParams.Contains(queryParam))
             {
-                msgOnlyResp badreqRespBody = new msgOnlyResp();
+                MsgOnlyResp badreqRespBody = new MsgOnlyResp();
                 badreqRespBody.message = "Failure. The recieved queryParam doesn't match allowed types.";
                 return StatusCode((int)HttpStatusCode.BadRequest, badreqRespBody);
             }
@@ -143,7 +127,7 @@ namespace TripPlannerAPI.Controllers
             List<string> args = queryParam.Split('-').ToList();
             var result = await _tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
 
-            var respBody = new tripListContainer();
+            var respBody = new TripListContainer();
             respBody.trips = ((List<Trip>)result).Select(t => new TripDto(t, user)).ToList();
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }
@@ -152,10 +136,10 @@ namespace TripPlannerAPI.Controllers
 
         [Authorize]
         [HttpPut("/my-favorites/add/{tripId}")]
-        [ProducesResponseType(typeof(msgOnlyResp), 200)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(msgOnlyResp), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<msgOnlyResp>> AddFavoriteTrip(int tripId)
+        [ProducesResponseType(typeof(MsgOnlyResp), 200)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<MsgOnlyResp>> AddFavoriteTrip(int tripId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             user.FavoriteTrips = (List<Trip>)await _tripRepository.GetFavoriteTrips(user);
@@ -166,12 +150,12 @@ namespace TripPlannerAPI.Controllers
             var trip = await _tripRepository.GetTripAsync(tripId);
             if (trip == null)
             {
-                var respBody = new msgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
+                var respBody = new MsgOnlyResp(); respBody.message = "Failure: Trip with given Id not found.";
                 return StatusCode((int)HttpStatusCode.NotFound, respBody);
             }
             user.FavoriteTrips.Add(trip);
             var result = await _userManager.UpdateAsync(user);
-            var resBody = new msgOnlyResp();
+            var resBody = new MsgOnlyResp();
             int statusCode;
             if (result == null)
             {
@@ -189,11 +173,11 @@ namespace TripPlannerAPI.Controllers
 
         [Authorize]
         [HttpGet("/my-favorites/all")]
-        [ProducesResponseType(typeof(tripListContainer), 200)]
-        public async Task<ActionResult<msgOnlyResp>> GetFavoriteTrips()
+        [ProducesResponseType(typeof(TripListContainer), 200)]
+        public async Task<ActionResult<MsgOnlyResp>> GetFavoriteTrips()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            tripListContainer respBody = new tripListContainer();
+            TripListContainer respBody = new TripListContainer();
             var favTrips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
             respBody.trips = ((List<Trip>)favTrips).Select(t => new TripDto(t, user, true)).ToList();
             return StatusCode((int) HttpStatusCode.OK, respBody);

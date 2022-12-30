@@ -8,7 +8,6 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Identity;
 using TripPlannerAPI.Services;
 using TripPlannerAPI.Controllers;
-using TripPlannerAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Principal;
@@ -18,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using TripPlannerAPI.Repositories;
 using static TripPlannerAPI.Controllers.PostController;
 using System.Net;
+using TripPlannerAPI.DTOs.PostDTOs;
 
 namespace TripPlannerAPI.Tests.Controller
 {
@@ -50,7 +50,7 @@ namespace TripPlannerAPI.Tests.Controller
             fakeTrip.members.Add(user);
             fakeTrip.creator = user;
             A.CallTo(()=>_tripRepository.GetTripAsync(fakeTrip.tripId)).Returns(fakeTrip);
-            PostInput postInput = A.Fake<PostInput>();
+            PostInputDto postInput = A.Fake<PostInputDto>();
             postInput.content = postContent;
             Post post = A.Fake<Post>();
             post.Creator = user;
@@ -96,7 +96,7 @@ namespace TripPlannerAPI.Tests.Controller
             ///Assert:
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, objRes.StatusCode);
-            Assert.True(((postsListWrapper)objRes.Value).posts.Count == 1);
+            Assert.True(((postsListWrapperDto)objRes.Value).posts.Count == 1);
         }
 
 
