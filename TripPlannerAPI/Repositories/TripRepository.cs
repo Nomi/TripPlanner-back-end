@@ -89,6 +89,8 @@ namespace TripPlannerAPI.Repositories
                 .Include(u=> (u as User).FavoriteTrips)
                     .ThenInclude(t=>t.members)
                         .ThenInclude(m => m.UserName)
+                .Include(u=> u.FavoriteTrips)
+                    .ThenInclude(t=>t.waypoints)
                 //.Include(u=>u.FavoriteTrips)
                 //    .ThenInclude(t=>t.members)
                 //        .ThenInclude(m=>usr.UserRating)
