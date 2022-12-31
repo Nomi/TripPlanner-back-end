@@ -133,7 +133,9 @@ namespace TripPlannerAPI.Controllers
             if(user==null) return NotFound("The user you tried to delete doesn't exist.");
 
             _ = await _userManager.DeleteAsync(user);
-            return Ok("User "+ username +" succesfully deleted.");
+            var respBody = new MsgOnlyResp();
+            respBody.message = "User " + username + " was succesfully deleted.";
+            return Ok(respBody);
         }
         [Authorize]
         [HttpGet("all-users")]
