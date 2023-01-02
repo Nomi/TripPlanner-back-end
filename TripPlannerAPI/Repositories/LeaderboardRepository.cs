@@ -40,13 +40,13 @@ namespace TripPlannerAPI.Repositories
                     orderByExpression = (x => x.distance);
                     break;
                 case "userrating":
-                    orderByExpression=(x=>x.UserRating); 
+                    orderByExpression = (x => x.UserRating); 
                     break;
                 case "organizerrating":
-                    orderByExpression=(x=>x.OrganizerRating);
+                    orderByExpression = (x => x.OrganizerRating);
                     break;
                 case "numtripsjoined":
-                    orderByExpression=(x=>x.numTripsJoined); 
+                    orderByExpression = (x => x.numTripsJoined);
                     break;
                 case "numtripscreated":
                     orderByExpression = (x => x.numTripsCreated);
