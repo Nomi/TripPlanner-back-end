@@ -10,6 +10,6 @@ namespace TripPlannerAPI.Repositories
 {
     public interface ILeaderboardRepository
     {
-        public Task<IEnumerable<LeaderboardTravellerDTO>> GetTopTenDistanceTravellers();
+        public Task<IEnumerable<LeaderboardTravellerDTO>> GetLeaderboard(string type);
     }
 }

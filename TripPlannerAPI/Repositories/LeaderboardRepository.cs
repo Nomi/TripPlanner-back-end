@@ -22,17 +22,40 @@ namespace TripPlannerAPI.Repositories
         {
             this.appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<LeaderboardTravellerDTO>> GetTopTenDistanceTravellers()
+        public async Task<IEnumerable<LeaderboardTravellerDTO>> GetLeaderboard(string type)
         {
             /*
-            -- SQL query for the same task.
+            -- SQL query for top 10 users by distance travelled.
             select [dbo].[AspNetUsers].username, sum([dbo].[Trips].distance) as SumDist from [dbo].[AspNetUsers] 
             join [dbo].[TripUser1] on [dbo].[AspNetUsers].Id = [dbo].[TripUser1].membersId
             join [dbo].[Trips] on [dbo].[TripUser1].TripsJoinedtripId = [dbo].[Trips].tripId
             WHERE [dbo].[Trips].date < SYSDATETIME()
             group by [dbo].[AspNetUsers].username order by SumDist desc
             -- Can't seem to be able to limit output to 10 results though.
-             */
+            */
+            Expression<Func<LeaderboardTravellerDTO, float>> orderByExpression;
+            switch(type.ToLower())
+            {
+                case "distance":
+                    orderByExpression = (x => x.distance);
+                    break;
+                case "userrating":
+                    orderByExpression=(x=>x.UserRating); 
+                    break;
+                case "organizerrating":
+                    orderByExpression=(x=>x.OrganizerRating);
+                    break;
+                case "numtripsjoined":
+                    orderByExpression=(x=>x.numTripsJoined); 
+                    break;
+                case "numtripscreated":
+                    orderByExpression = (x => x.numTripsCreated);
+                    break;
+                default:
+                    throw new ArgumentException(nameof(type));
+                    //break;
+            }
+
             var result = await appDbContext.Users
                                     .Select(u => new LeaderboardTravellerDTO()
                                         {
@@ -43,7 +66,7 @@ namespace TripPlannerAPI.Repositories
                                             numTripsJoined = u.TripsJoined.Count(),
                                             numTripsCreated = u.CreatedTrips.Count()
                                         })
-                                    .OrderByDescending(x=>x.distance)
+                                    .OrderByDescending(orderByExpression)
                                     .Take(10)
                                     .ToListAsync(); //ToListAsync is why we await. Otherwise it's just wrong.
             return result;

@@ -20,12 +20,12 @@ namespace TripPlannerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet()]
+        [HttpGet("/{type}")]
         [ProducesResponseType(typeof(ListLeaderboardTravellerDTO), 200)]
-        public async Task<ActionResult<ListLeaderboardTravellerDTO>> GetTopTenDistDesc()
+        public async Task<ActionResult<ListLeaderboardTravellerDTO>> GetLeaderboard(string type)
         {
             ListLeaderboardTravellerDTO respBody = new();
-            respBody.travellers = (List<LeaderboardTravellerDTO>) await _leaderboardRepository.GetTopTenDistanceTravellers();
+            respBody.travellers = (List<LeaderboardTravellerDTO>) await _leaderboardRepository.GetLeaderboard(type);
             return Ok(respBody);
         }
     }
