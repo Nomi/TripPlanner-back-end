@@ -32,5 +32,6 @@ namespace TripPlannerAPI.Models
         [InverseProperty("members")]
         [JsonIgnore]//NEEDED to stop circular references.
         public List<Trip> TripsJoined { get; set; }
+        public List<TripTypePreference>? TripTypesPreferences { get; set; }
     }
 }
