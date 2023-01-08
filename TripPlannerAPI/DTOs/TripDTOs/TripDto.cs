@@ -53,7 +53,7 @@ namespace TripPlannerAPI.DTOs.TripDTOs
             preferences = trip.preferences;
 
 
-            creator = new UserDto(usr);
+            creator = new UserDto(trip.creator);
             members = trip.members.Select(u => new UserDto(u)).ToList();
 
             isJoinedByCurrentUser = trip.members.Any(u => u.Id == usr.Id);
