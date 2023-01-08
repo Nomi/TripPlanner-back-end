@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5b5471a1-bb9d-4ab3-90b8-83c2b3789845",
-                            ConcurrencyStamp = "00a8cb3b-344a-4d0f-b6ad-c9c589501f63",
+                            Id = "a2ac32a6-2701-404a-934a-5dfef6140a4a",
+                            ConcurrencyStamp = "c9635141-996a-4450-87e3-2d4f901e10af",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "7e79ee2b-3ecd-4504-ab06-afcb046b38d0",
-                            ConcurrencyStamp = "61b215cc-2e9d-4fbf-bde3-6026db6e56c9",
+                            Id = "1f14ed1d-d6df-458f-b84c-ae898abcc185",
+                            ConcurrencyStamp = "7a083513-18b9-4722-bc00-979f1504b4cd",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -250,6 +250,83 @@ namespace TripPlannerAPI.Migrations
                     b.ToTable("Preference");
                 });
 
+            modelBuilder.Entity("TripPlannerAPI.Models.PreferenceType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PreferenceTypeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PreferenceType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PreferenceTypeName = "Entertainment"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            PreferenceTypeName = "Sightseeing"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            PreferenceTypeName = "Free Ride"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            PreferenceTypeName = "Training"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            PreferenceTypeName = "Exploring"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            PreferenceTypeName = "History"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            PreferenceTypeName = "Culture"
+                        });
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsOrganizer")
+                        .HasColumnType("bit");
+
+                    b.Property<float>("RatingPoints")
+                        .HasColumnType("real");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Ratings");
+                });
+
             modelBuilder.Entity("TripPlannerAPI.Models.Trip", b =>
                 {
                     b.Property<int>("tripId")
@@ -285,6 +362,71 @@ namespace TripPlannerAPI.Migrations
                     b.HasIndex("creatorId");
 
                     b.ToTable("Trips");
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.TripType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TripType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TypeName = "Car"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            TypeName = "Bike"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            TypeName = "Hike"
+                        });
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.TripTypePreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PreferenceTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TripTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PreferenceTypeId");
+
+                    b.HasIndex("TripTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TripTypesPreferences");
                 });
 
             modelBuilder.Entity("TripPlannerAPI.Models.User", b =>
@@ -470,6 +612,15 @@ namespace TripPlannerAPI.Migrations
                         .HasForeignKey("tripId");
                 });
 
+            modelBuilder.Entity("TripPlannerAPI.Models.Rating", b =>
+                {
+                    b.HasOne("TripPlannerAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TripPlannerAPI.Models.Trip", b =>
                 {
                     b.HasOne("TripPlannerAPI.Models.User", "creator")
@@ -477,6 +628,31 @@ namespace TripPlannerAPI.Migrations
                         .HasForeignKey("creatorId");
 
                     b.Navigation("creator");
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.TripTypePreference", b =>
+                {
+                    b.HasOne("TripPlannerAPI.Models.PreferenceType", "PreferenceType")
+                        .WithMany()
+                        .HasForeignKey("PreferenceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TripPlannerAPI.Models.TripType", "TripType")
+                        .WithMany()
+                        .HasForeignKey("TripTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TripPlannerAPI.Models.User", "User")
+                        .WithMany("TripTypesPreferences")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("PreferenceType");
+
+                    b.Navigation("TripType");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TripUser", b =>
@@ -519,6 +695,8 @@ namespace TripPlannerAPI.Migrations
             modelBuilder.Entity("TripPlannerAPI.Models.User", b =>
                 {
                     b.Navigation("CreatedTrips");
+
+                    b.Navigation("TripTypesPreferences");
                 });
 #pragma warning restore 612, 618
         }
