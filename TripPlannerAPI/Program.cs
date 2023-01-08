@@ -79,7 +79,9 @@ builder.Services.AddScoped<ITokenService,TokenService>();
 //builder.Services.AddScoped<TripManager>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ITripTypePreferenceRepository, TripTypePreferenceRepository>();
 builder.Services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
+builder.Services.AddScoped<IUserRatingRepository, UserRatingRepository>();
 builder.Services.AddCors(options => options.AddPolicy("Cors",
             builder =>
             {
