@@ -1,8 +1,9 @@
 name: Build and deploy .NET Core application to Azure Web App TripPlannerAPI20221213230613
 on:
   push:
+  pull_request:
     branches:
-    - master
+      - "master"
 env:
   AZURE_WEBAPP_NAME: TripPlannerAPI20221213230613
   AZURE_WEBAPP_PACKAGE_PATH: TripPlannerAPI\publish
@@ -46,6 +47,7 @@ jobs:
   #   uses: actions/setup-dotnet@v1
   deployment:
     name: deploy
+    if: github.ref == 'refs/heads/master'
     environment: 
       name: production
       url: https://tripplannerapi20221213230613.azurewebsites.net/swagger
