@@ -16,6 +16,14 @@ using static TripPlannerAPI.Controllers.TripController;
 
 namespace TripPlannerAPI.Controllers
 {
+    public enum GetTripsQueryParams //"created-future", "created-past", "joined-future", "joined-past" 
+    {
+        created_future,
+        created_past,
+        joined_future,
+        joined_past
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class TripController : ControllerBase
@@ -109,22 +117,28 @@ namespace TripPlannerAPI.Controllers
             return StatusCode(statusCode, resBody);
         }
 
-        internal List<String> possibleQueryParams = new List<string>() { "created-future", "created-past", "joined-future", "joined-past" };
+        //internal List<String> possibleQueryParams = new List<string>() { "created_future", "created_past", "joined_future", "joined_past" };
+        /// <summary>
+        /// Gets trips based on criteria specified in queryParam parameter.
+        /// </summary>
+        /// <param name="queryParam">Specifies which filters to use when getting the trips.</param>
+        /// <returns>HTTP response.</returns>
         [Authorize]
         [HttpGet("my-trips/{queryParam}")]
-        [ProducesResponseType(typeof(TripListContainer), 200)]
-        [ProducesResponseType(typeof(MsgOnlyResp),(int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<TripListContainer>> GetTripsByQueryParam(string queryParam)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(TripListContainer), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(MsgOnlyResp),(int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<TripListContainer>> GetTripsByQueryParam([FromRoute]GetTripsQueryParams queryParam)
         {
-            
-            if (!possibleQueryParams.Contains(queryParam))
-            {
-                MsgOnlyResp badreqRespBody = new MsgOnlyResp();
-                badreqRespBody.message = "Failure. The recieved queryParam doesn't match allowed types.";
-                return StatusCode((int)HttpStatusCode.BadRequest, badreqRespBody);
-            }
+            string _queryParam = queryParam.ToString();
+            //if (!possibleQueryParams.Contains(_queryParam))
+            //{
+            //    MsgOnlyResp badreqRespBody = new MsgOnlyResp();
+            //    badreqRespBody.message = "Failure. The recieved queryParam doesn't match allowed types.";
+            //    return StatusCode((int)HttpStatusCode.BadRequest, badreqRespBody);
+            //}
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            List<string> args = queryParam.Split('-').ToList();
+            List<string> args = _queryParam.Split('_').ToList();
             var result = await _tripRepository.GetTripsQueryParamFilteredAsync(args[0], args[1],user);
 
             var respBody = new TripListContainer();

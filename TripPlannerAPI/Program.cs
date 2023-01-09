@@ -11,12 +11,19 @@ using TripPlannerAPI.Models;
 using TripPlannerAPI.Services;
 using TripPlannerAPI.Repositories;
 using System.Configuration;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Xml.XPath;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+ options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+ );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
@@ -46,6 +53,18 @@ builder.Services.AddSwaggerGen(setup =>
     });
 
 });
+
+
+//builder.Services.Configure(options =>
+//    options.DescribeAllEnumsAsStrings();
+//    var xmlDocFile = Path.Combine(AppContext.BaseDirectory, $"{_hostingEnv.ApplicationName}.xml");
+//    if (File.Exists(xmlDocFile))
+//    {
+//        var comments = new XPathDocument(xmlDocFile);
+//        options.OperationFilter<XmlCommentsOperationFilter>(comments);
+//        options.ModelFilter<XmlCommentsModelFilter>(comments);
+//    }
+//);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
