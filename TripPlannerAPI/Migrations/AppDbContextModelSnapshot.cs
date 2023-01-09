@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a2ac32a6-2701-404a-934a-5dfef6140a4a",
-                            ConcurrencyStamp = "c9635141-996a-4450-87e3-2d4f901e10af",
+                            Id = "40ce8f77-e4e2-4f95-8b0a-ebcb4434b8cd",
+                            ConcurrencyStamp = "611412cd-783a-4c29-a8b3-388b44d69269",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "1f14ed1d-d6df-458f-b84c-ae898abcc185",
-                            ConcurrencyStamp = "7a083513-18b9-4722-bc00-979f1504b4cd",
+                            Id = "4266ac01-e1df-485a-8670-52284ee68dc5",
+                            ConcurrencyStamp = "a9e57684-b128-41f2-b641-adbd3509af30",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -279,27 +279,32 @@ namespace TripPlannerAPI.Migrations
                         new
                         {
                             Id = 3,
-                            PreferenceTypeName = "Free Ride"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            PreferenceTypeName = "Training"
-                        },
-                        new
-                        {
-                            Id = 5,
                             PreferenceTypeName = "Exploring"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 4,
+                            PreferenceTypeName = "Culture"
+                        },
+                        new
+                        {
+                            Id = 5,
                             PreferenceTypeName = "History"
                         },
                         new
                         {
+                            Id = 6,
+                            PreferenceTypeName = "Free ride"
+                        },
+                        new
+                        {
                             Id = 7,
-                            PreferenceTypeName = "Culture"
+                            PreferenceTypeName = "Training"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            PreferenceTypeName = "Nature"
                         });
                 });
 
@@ -384,17 +389,17 @@ namespace TripPlannerAPI.Migrations
                         new
                         {
                             Id = 1,
-                            TypeName = "Car"
+                            TypeName = "car"
                         },
                         new
                         {
                             Id = 2,
-                            TypeName = "Bike"
+                            TypeName = "bike"
                         },
                         new
                         {
                             Id = 3,
-                            TypeName = "Hike"
+                            TypeName = "foot"
                         });
                 });
 

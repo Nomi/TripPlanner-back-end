@@ -30,6 +30,7 @@ namespace TripPlannerAPI.Models
         public float totalTime { get; set; }
         public String description { get; set; }
         public float distance { get; set; }
+        public bool isRecommended { get; set; } = false;
         public List<Preference> preferences { get; set; }
         public List<Location> waypoints { get; set; }
         public List<User> members { get; set; }

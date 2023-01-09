@@ -24,19 +24,20 @@ namespace TripPlannerAPI.Data
 
             builder.Entity<TripType>()
                 .HasData(
-                new TripType { Id = 1, TypeName = "Car"},
-                new TripType { Id = 2, TypeName = "Bike"},
-                new TripType { Id = 3, TypeName = "Hike"});
+                new TripType { Id = 1, TypeName = "car"},
+                new TripType { Id = 2, TypeName = "bike"},
+                new TripType { Id = 3, TypeName = "foot"});
 
             builder.Entity<PreferenceType>()
                 .HasData(
-                new PreferenceType { Id = 1, PreferenceTypeName = "Entertainment"},
+                new PreferenceType { Id = 1, PreferenceTypeName = "Entertainment" },
                 new PreferenceType { Id = 2, PreferenceTypeName = "Sightseeing" },
-                new PreferenceType { Id = 3, PreferenceTypeName = "Free Ride" },
-                new PreferenceType { Id = 4, PreferenceTypeName = "Training" },
-                new PreferenceType { Id = 5, PreferenceTypeName = "Exploring" },
-                new PreferenceType { Id = 6, PreferenceTypeName = "History" },
-                new PreferenceType { Id = 7, PreferenceTypeName = "Culture" });
+                new PreferenceType { Id = 3, PreferenceTypeName = "Exploring" },
+                new PreferenceType { Id = 4, PreferenceTypeName = "Culture" },
+                new PreferenceType { Id = 5, PreferenceTypeName = "History" },
+                new PreferenceType { Id = 6, PreferenceTypeName = "Free ride" },
+                new PreferenceType { Id = 7, PreferenceTypeName = "Training" },
+                new PreferenceType { Id = 8, PreferenceTypeName = "Nature" });
 
             builder.Entity<IdentityRole>()
                 .HasData(
