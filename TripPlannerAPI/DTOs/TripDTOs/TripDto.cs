@@ -39,6 +39,7 @@ namespace TripPlannerAPI.DTOs.TripDTOs
         public List<Location> waypoints { get; set; }
         public List<UserDto> members { get; set; }
         public UserDto creator { get; set; }
+        public bool isRecommended { get; set; }
 
         public TripDto(Trip trip, User usr)
         {
@@ -51,7 +52,7 @@ namespace TripPlannerAPI.DTOs.TripDTOs
             description = trip.description;
             waypoints = trip.waypoints;
             preferences = trip.preferences;
-
+            isRecommended = trip.isRecommended;   
 
             creator = new UserDto(trip.creator);
             members = trip.members.Select(u => new UserDto(u)).ToList();
@@ -71,6 +72,7 @@ namespace TripPlannerAPI.DTOs.TripDTOs
             description = trip.description;
             waypoints = trip.waypoints;
             preferences = trip.preferences;
+            isRecommended = trip.isRecommended;
 
             creator = new UserDto(usr);
             members = trip.members.Select(u => new UserDto(u)).ToList();
