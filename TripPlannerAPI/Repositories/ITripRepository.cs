@@ -8,7 +8,7 @@ namespace TripPlannerAPI.Repositories
     public interface ITripRepository
     {
         public Task<Trip> GetTripAsync(int id);
-        public Task<IEnumerable<Trip>> GetCurrentOrFutureTripsNotMemberOrCreatorAsync(User usr);
+        public Task<IEnumerable<Trip>> GetAllTripsCurrentOrFutureUserNotMemberOrCreatorAsync(User usr);
         public Task<IEnumerable<Trip>> GetTripsQueryParamFilteredAsync(string relationship, string timeperiod, User usr);
         public Task<IEnumerable<Trip>> GetFavoriteTrips(User usr);
         public Task<Trip> CreateTripAsync(Trip trip);
