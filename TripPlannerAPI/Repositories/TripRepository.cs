@@ -75,9 +75,15 @@ namespace TripPlannerAPI.Repositories
         }
         public async Task<IEnumerable<Trip>> GetCurrentOrFutureTripsNotMemberOrCreatorAsync(User usr)
         {
-            return await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id) && t.date>DateTime.Today.AddDays(-1)))
-                .Include(x=>x.creator).Include(x=>x.members).Include(x=>x.waypoints).Include(x => x.preferences).Include(x=>x.FavoritedBy)
-                .ToListAsync();
+            var trips =  await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id) && t.date > DateTime.Today.AddDays(-1)))
+              .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences).Include(x => x.FavoritedBy)
+              .ToListAsync();
+
+            await GetTripsRecommendations(usr, "car", trips);
+            await GetTripsRecommendations(usr, "bike", trips);
+            await GetTripsRecommendations(usr, "foot", trips);
+
+            return trips;
         }
 
         public async Task<IEnumerable<Trip>> GetFavoriteTrips(User usr)
@@ -117,6 +123,55 @@ namespace TripPlannerAPI.Repositories
             }
             
             return null;
+        }
+
+        public async Task GetTripsRecommendations(User user, string tripType, List<Trip> trips)
+        {
+            var allTripsByType = trips
+                .Where(t => t.type == tripType)
+                .ToList();
+
+            var userPreferences = await appDbContext.TripTypesPreferences
+                .Where(t => t.User.Id == user.Id)
+                .Where(t => t.TripType.TypeName == tripType)
+                .ToListAsync();
+
+            var totalPoints = userPreferences.Sum(p => p.Points);
+
+            var weights = new Dictionary<int, float>();
+
+            foreach (var p in userPreferences)
+            {
+                weights.Add(p.PreferenceTypeId, (float)p.Points / totalPoints);
+            }
+
+            foreach (var trip in allTripsByType)
+            {
+                if (trip.preferences == null)
+                    continue;
+                float tripPoints = 0;
+                foreach (var p in trip.preferences)
+                {
+                    var preference = await appDbContext.TripTypesPreferences
+                        .Include(t => t.PreferenceType)
+                        .Where(t => t.PreferenceType.PreferenceTypeName == p.preferenceStr)
+                        .FirstOrDefaultAsync();
+
+                    var id = preference.PreferenceType.Id;
+
+                    tripPoints += weights[id];
+                }
+
+                if (tripPoints > .3f)
+                {
+                    var recommendedTrip = await appDbContext.Trips.SingleOrDefaultAsync(
+                        t => t.tripId == trip.tripId);
+
+                    recommendedTrip.isRecommended = true;
+
+                    await appDbContext.SaveChangesAsync();
+                }
+            }
         }
     }
 }
