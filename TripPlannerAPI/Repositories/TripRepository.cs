@@ -75,7 +75,7 @@ namespace TripPlannerAPI.Repositories
         }
         public async Task<IEnumerable<Trip>> GetAllTripsCurrentOrFutureUserNotMemberOrCreatorAsync(User usr)
         {
-            var trips =  await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id) && t.date > DateTime.Today.AddDays(-1)))
+            var trips =  await appDbContext.Trips.Where(t => (t.creator.Id != usr.Id && !t.members.Any(u => u.Id == usr.Id) && t.date >= DateTime.Now))
               .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences).Include(x => x.FavoritedBy)
               .ToListAsync();
 
