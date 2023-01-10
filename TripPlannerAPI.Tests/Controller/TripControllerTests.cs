@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TripPlannerAPI.Repositories;
-using static TripPlannerAPI.Controllers.PostController;
+using static TripPlannerAPI.Controllers.TripController;
 using System.Net;
 using static TripPlannerAPI.Controllers.TripController;
 
@@ -78,7 +78,7 @@ namespace TripPlannerAPI.Tests.Controller
         }
 
         [Fact]
-        public void PostController_GetAllTripsNotCreatorOrMemberOf_ReturnsOK()
+        public void TripController_GetAllTripsNotCreatorOrMemberOf_ReturnsOK()
         {
             ///Arrange
             String username = "TestUsername";
@@ -99,11 +99,12 @@ namespace TripPlannerAPI.Tests.Controller
         }
 
         [Fact]
-        public void PostController_GetTripsByQueryParam_ReturnsOK()
+        public void TripController_GetTripsByQueryParam_ReturnsOK()
         {
             ///Arrange
-            String queryParam = "created-future";
-            List<string> args = queryParam.Split('-').ToList();
+            //String queryParam = "created_future";
+            GetTripsQueryParams queryParam = GetTripsQueryParams.created_future;
+            List<string> args = queryParam.ToString().Split('_').ToList();
             String username = "TestUsername";
             var controller = new TripController(_userManager, _tripRepository);
             User user = AuthorizeContext(controller, username);
@@ -123,7 +124,7 @@ namespace TripPlannerAPI.Tests.Controller
         }
 
         [Fact]
-        public void PostController_GetFavoriteTrips_ReturnsOK()
+        public void TripController_GetFavoriteTrips_ReturnsOK()
         {
             ///Arrange
             String username = "TestUsername";
@@ -144,7 +145,7 @@ namespace TripPlannerAPI.Tests.Controller
         }
 
         [Fact]
-        public void PostController_GetTrip_ForTripThatDoesntExistReturnsNotFound()
+        public void TripController_GetTrip_ForTripThatDoesntExistReturnsNotFound()
         {
             ///Arrange
             var controller = new TripController(_userManager,_tripRepository);
@@ -165,7 +166,7 @@ namespace TripPlannerAPI.Tests.Controller
         }
 
         [Fact]
-        public void PostController_JoinTrip_ForTripThatDoesntExistReturnsNotFound()
+        public void TripController_JoinTrip_ForTripThatDoesntExistReturnsNotFound()
         {
             ///Arrange
             var controller = new TripController(_userManager, _tripRepository);
@@ -185,7 +186,7 @@ namespace TripPlannerAPI.Tests.Controller
             Assert.Equal((int)HttpStatusCode.NotFound, objRes.StatusCode);
         }
         [Fact]
-        public void PostController_AddFavoriteTrip_ForTripThatDoesntExistReturnsNotFound()
+        public void TripController_AddFavoriteTrip_ForTripThatDoesntExistReturnsNotFound()
         {
             ///Arrange
             var controller = new TripController(_userManager, _tripRepository);
