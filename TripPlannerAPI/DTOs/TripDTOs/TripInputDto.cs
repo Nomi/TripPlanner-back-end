@@ -11,6 +11,7 @@ namespace TripPlannerAPI.Controllers
         public float distance { get; set; }
         public String type { get; set; } 
         public List<String> preferences { get; set; }
-        public List<Location> waypoints { get; set; } 
+        public List<Location> waypoints { get; set; }
+        public List<Pin> pins { get; set; }
     }
 }

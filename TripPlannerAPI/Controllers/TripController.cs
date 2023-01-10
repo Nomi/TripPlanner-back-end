@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
+using TripPlannerAPI.DTOs;
 using TripPlannerAPI.DTOs.TripDTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Repositories;
@@ -195,6 +196,20 @@ namespace TripPlannerAPI.Controllers
             var favTrips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
             respBody.trips = ((List<Trip>)favTrips).Select(t => new TripDto(t, user, true)).ToList();
             return StatusCode((int) HttpStatusCode.OK, respBody);
+        }
+
+        [Authorize]
+        [HttpPost("/pins")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<PinDto>> AddPins(PinDto pins)
+        {
+            var pinDto = await _tripRepository.AddPins(pins);
+
+            if(pinDto == null)
+                return BadRequest("Trip with such Id does not exist!");
+
+            return Ok(pinDto);
         }
     }
 }

@@ -47,22 +47,6 @@ namespace TripPlannerAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "40ce8f77-e4e2-4f95-8b0a-ebcb4434b8cd",
-                            ConcurrencyStamp = "611412cd-783a-4c29-a8b3-388b44d69269",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "4266ac01-e1df-485a-8670-52284ee68dc5",
-                            ConcurrencyStamp = "a9e57684-b128-41f2-b641-adbd3509af30",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -196,6 +180,33 @@ namespace TripPlannerAPI.Migrations
                     b.HasIndex("tripId");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("TripPlannerAPI.Models.Pin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Lat")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Lng")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("tripId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("tripId");
+
+                    b.ToTable("Pin");
                 });
 
             modelBuilder.Entity("TripPlannerAPI.Models.Post", b =>
@@ -355,6 +366,9 @@ namespace TripPlannerAPI.Migrations
 
                     b.Property<float>("distance")
                         .HasColumnType("real");
+
+                    b.Property<bool>("isRecommended")
+                        .HasColumnType("bit");
 
                     b.Property<float>("totalTime")
                         .HasColumnType("real");
@@ -593,6 +607,13 @@ namespace TripPlannerAPI.Migrations
                         .HasForeignKey("tripId");
                 });
 
+            modelBuilder.Entity("TripPlannerAPI.Models.Pin", b =>
+                {
+                    b.HasOne("TripPlannerAPI.Models.Trip", null)
+                        .WithMany("Pins")
+                        .HasForeignKey("tripId");
+                });
+
             modelBuilder.Entity("TripPlannerAPI.Models.Post", b =>
                 {
                     b.HasOne("TripPlannerAPI.Models.User", "Creator")
@@ -692,6 +713,8 @@ namespace TripPlannerAPI.Migrations
 
             modelBuilder.Entity("TripPlannerAPI.Models.Trip", b =>
                 {
+                    b.Navigation("Pins");
+
                     b.Navigation("preferences");
 
                     b.Navigation("waypoints");
