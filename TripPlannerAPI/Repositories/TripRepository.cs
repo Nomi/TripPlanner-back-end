@@ -131,14 +131,29 @@ namespace TripPlannerAPI.Repositories
                 .Where(t => t.type == tripType)
                 .ToList();
 
+            foreach(var trip in allTripsByType)
+            {
+                var t = await appDbContext.Trips
+                   .Where(tr => tr.tripId == trip.tripId)
+                   .FirstOrDefaultAsync();
+
+                t.isRecommended = false;
+
+                await appDbContext.SaveChangesAsync();
+            }
+
             var userPreferences = await appDbContext.TripTypesPreferences
                 .Where(t => t.User.Id == user.Id)
                 .Where(t => t.TripType.TypeName == tripType)
                 .ToListAsync();
 
+            if (userPreferences.Count == 0)
+                return;
+
             var totalPoints = userPreferences.Sum(p => p.Points);
 
             var weights = new Dictionary<int, float>();
+            var tripsWithHighestPoints = new Dictionary<Trip, float>();
 
             foreach (var p in userPreferences)
             {
@@ -146,7 +161,7 @@ namespace TripPlannerAPI.Repositories
             }
 
             foreach (var trip in allTripsByType)
-            {
+            { 
                 if (trip.preferences == null)
                     continue;
                 float tripPoints = 0;
@@ -164,13 +179,20 @@ namespace TripPlannerAPI.Repositories
 
                 if (tripPoints > .3f)
                 {
-                    var recommendedTrip = await appDbContext.Trips.SingleOrDefaultAsync(
-                        t => t.tripId == trip.tripId);
-
-                    recommendedTrip.isRecommended = true;
-
-                    await appDbContext.SaveChangesAsync();
+                    tripsWithHighestPoints.Add(trip, tripPoints);
                 }
+            }
+
+            if(tripsWithHighestPoints.Count > 0)
+            {
+                var recomTripId =  tripsWithHighestPoints.MaxBy(kvp => kvp.Value).Key.tripId;
+
+                var recommendedTrip = await appDbContext.Trips.SingleOrDefaultAsync(
+                        t => t.tripId == recomTripId);
+
+                recommendedTrip.isRecommended = true;
+
+                await appDbContext.SaveChangesAsync();
             }
         }
     }
