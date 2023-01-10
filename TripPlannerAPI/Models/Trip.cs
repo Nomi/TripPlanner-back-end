@@ -37,5 +37,6 @@ namespace TripPlannerAPI.Models
         public User creator { get; set; }
         [JsonIgnore] // NEEDED to stop circular references. //Also, I have no use for this here.
         public List<User> FavoritedBy { get; set; }
+        public List<Pin> Pins { get; set; }
     }
 }
