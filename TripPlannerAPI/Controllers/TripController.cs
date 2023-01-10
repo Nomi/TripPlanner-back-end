@@ -209,7 +209,7 @@ namespace TripPlannerAPI.Controllers
             if(pinDto == null)
                 return BadRequest("Trip with such Id does not exist!");
 
-            return Ok("pins added sucessfuly");
+            return Ok(pinDto);
         }
     }
 }
