@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TripPlannerAPI.DTOs;
 using TripPlannerAPI.Models;
 
 namespace TripPlannerAPI.Repositories
@@ -14,5 +15,6 @@ namespace TripPlannerAPI.Repositories
         public Task<Trip> CreateTripAsync(Trip trip);
         public Task<Trip> UpdateTripAsync(Trip trip);
         public void DeleteTripAsync(int id);
+        public Task<PinDto> AddPins(PinDto pins);
     }
 }
