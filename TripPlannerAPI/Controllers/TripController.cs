@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
+using TripPlannerAPI.DTOs;
 using TripPlannerAPI.DTOs.TripDTOs;
 using TripPlannerAPI.Models;
 using TripPlannerAPI.Repositories;
@@ -48,7 +49,7 @@ namespace TripPlannerAPI.Controllers
             String[] splitStartTime = _trip.startTime.Split(":");
             DateTime dt = new DateTime(_trip.date.Year, _trip.date.Month, _trip.date.Day, int.Parse(splitStartTime[0]), int.Parse(splitStartTime[1]), 0, _trip.date.Kind);
 
-            var trip = new Trip { type = _trip.type, date = dt, creator = user, members = new List<User>(), waypoints = _trip.waypoints, description=_trip.description, distance = _trip.distance, totalTime = _trip.totalTime, creationDateTime=DateTime.Now };
+            var trip = new Trip { type = _trip.type, date = dt, creator = user, members = new List<User>(), waypoints = _trip.waypoints, Pins = _trip.pins, description=_trip.description, distance = _trip.distance, totalTime = _trip.totalTime, creationDateTime=DateTime.Now };
             trip.preferences = new List<Preference>();
             for (int i = 0; i < _trip.preferences.Count(); i++)
             {
@@ -195,6 +196,20 @@ namespace TripPlannerAPI.Controllers
             var favTrips = (List<Trip>) await _tripRepository.GetFavoriteTrips(user);
             respBody.trips = ((List<Trip>)favTrips).Select(t => new TripDto(t, user, true)).ToList();
             return StatusCode((int) HttpStatusCode.OK, respBody);
+        }
+
+        [Authorize]
+        [HttpPost("/pins")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<PinDto>> AddPins(PinDto pins)
+        {
+            var pinDto = await _tripRepository.AddPins(pins);
+
+            if(pinDto == null)
+                return BadRequest("Trip with such Id does not exist!");
+
+            return Ok(pinDto);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TripPlannerAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
+using TripPlannerAPI.DTOs;
 
 namespace TripPlannerAPI.Repositories
 {
@@ -41,12 +42,13 @@ namespace TripPlannerAPI.Repositories
         {
             return await appDbContext.Trips.Where(t=>t.tripId == id)
                 .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints)
-                .Include(x=>x.preferences).Include(x=>x.FavoritedBy)
+                .Include(x => x.Pins).Include(x=>x.preferences).Include(x=>x.FavoritedBy)
                 .FirstOrDefaultAsync(t => t.tripId == id);
         }
         public async Task<IEnumerable<Trip>> GetTripsAsync()
         {
-            return await appDbContext.Trips.Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints).Include(x => x.preferences).ToListAsync();
+            return await appDbContext.Trips.Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints)
+                .Include(x => x.Pins).Include(x => x.preferences).ToListAsync();
         }
         public async Task<IEnumerable<Trip>> GetTripsQueryParamFilteredAsync(string relationship, string timeperiod, User usr)
         {
@@ -70,7 +72,7 @@ namespace TripPlannerAPI.Repositories
             }
             return await appDbContext.Trips.Where(isRelated).Where(isFromTimePeriod)
                 .Include(x => x.creator).Include(x => x.members).Include(x => x.waypoints)
-                .Include(x => x.preferences).Include(x => x.FavoritedBy)
+                .Include(x => x.Pins).Include(x => x.preferences).Include(x => x.FavoritedBy)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Trip>> GetAllTripsCurrentOrFutureUserNotMemberOrCreatorAsync(User usr)
@@ -194,6 +196,27 @@ namespace TripPlannerAPI.Repositories
 
                 await appDbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<PinDto> AddPins(PinDto pins)
+        {
+            var trip = await appDbContext.Trips
+                .Where(t => t.tripId == pins.TripId)
+                .Include(t => t.Pins)
+                .FirstOrDefaultAsync();
+
+            if(pins.Pins != null && pins.Pins.Count != 0 && trip != null )
+            {
+                foreach(var pin in pins.Pins)
+                {
+                    trip.Pins.Add(pin);
+                }
+
+                await appDbContext.SaveChangesAsync();
+
+                return pins;
+            }
+            else { return null; }
         }
     }
 }
