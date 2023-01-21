@@ -67,7 +67,7 @@ builder.Services.AddSwaggerGen(setup =>
 //);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
 //builder.Services.AddDbContext<AppDbContext>(opt =>
 //{
 //    //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
