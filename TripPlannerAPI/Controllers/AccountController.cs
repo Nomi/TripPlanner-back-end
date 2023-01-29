@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Net;
 using TripPlannerAPI.Data;
@@ -157,7 +158,8 @@ namespace TripPlannerAPI.Controllers
                 return Unauthorized("You are not an Admin.");
 
             UserListContainerDto respBody = new();
-            respBody.Users = ((List<User>)await _userManager.GetUsersInRoleAsync(userRoleString)).Select(u => new UserDto(u)).ToList();
+            respBody.Users = ((List<User>)await _userManager.Users.ToListAsync()).Select(u => new UserDto(u)).ToList(); //((List<User>)await _userManager.GetUsersInRoleAsync(userRoleString)).Select(u => new UserDto(u)).ToList();
+            return StatusCode((int)HttpStatusCode.OK, respBody); 
             return StatusCode((int)HttpStatusCode.OK, respBody);
         }
 
