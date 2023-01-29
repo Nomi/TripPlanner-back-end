@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Net;
+using TripPlannerAPI.Data;
 using TripPlannerAPI.DTOs;
 using TripPlannerAPI.DTOs.AccountDTOs;
 using TripPlannerAPI.Models;
+using TripPlannerAPI.Repositories;
 using TripPlannerAPI.Services;
 
 namespace TripPlannerAPI.Controllers
@@ -28,11 +30,12 @@ namespace TripPlannerAPI.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
-
-        public AccountController(UserManager<User> userManager, ITokenService tokenService)
+        private readonly IUserRatingRepository _userRatingRepository; //Exists only for: EnsureAdminAt101Created()
+        public AccountController(UserManager<User> userManager, ITokenService tokenService, IUserRatingRepository userRatingRepository)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _userRatingRepository = userRatingRepository; //Exists only for: EnsureAdminAt101Created()
         }
 
         [HttpPost("login")]
@@ -41,7 +44,7 @@ namespace TripPlannerAPI.Controllers
         public async Task<ActionResult<LoginResponseDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.UserName);
-            
+
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized("The provided username-password pair does not match any accounts.");
 
@@ -49,7 +52,7 @@ namespace TripPlannerAPI.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(typeof(LoginResponseDto),200)]
+        [ProducesResponseType(typeof(LoginResponseDto), 200)]
         [ProducesResponseType(typeof(string), 401)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(string), 400)]
@@ -62,7 +65,7 @@ namespace TripPlannerAPI.Controllers
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 foreach (var err in result.Errors)
                 {
@@ -105,7 +108,7 @@ namespace TripPlannerAPI.Controllers
             if (callingUser == null)
                 return Unauthorized("Unauthorized.");
             var user = await _userManager.FindByNameAsync(username);
-            if(user==null)
+            if (user == null)
                 return NotFound("User not found.");
             return new GetUserResponseDto { username = username };
         }
@@ -130,7 +133,7 @@ namespace TripPlannerAPI.Controllers
                 return Unauthorized("You are not an Admin.");
 
             var user = await _userManager.FindByNameAsync(username);
-            if(user==null) return NotFound("The user you tried to delete doesn't exist.");
+            if (user == null) return NotFound("The user you tried to delete doesn't exist.");
 
             _ = await _userManager.DeleteAsync(user);
             var respBody = new MsgOnlyResp();
@@ -155,7 +158,15 @@ namespace TripPlannerAPI.Controllers
 
             UserListContainerDto respBody = new();
             respBody.Users = ((List<User>)await _userManager.GetUsersInRoleAsync(userRoleString)).Select(u => new UserDto(u)).ToList();
-            return StatusCode((int)HttpStatusCode.OK,respBody);
+            return StatusCode((int)HttpStatusCode.OK, respBody);
+        }
+
+        [HttpPost("ensure-Admin@101-created")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<StatusCodeResult> EnsureAdminAt101Created()
+        {
+            await _userRatingRepository.EnsureCreated_AdminAt101();
+            return StatusCode((int)HttpStatusCode.OK);
         }
     }
 }

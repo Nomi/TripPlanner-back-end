@@ -6,5 +6,6 @@ namespace TripPlannerAPI.Repositories
     public interface IUserRatingRepository
     {
         public Task<float> AddUserRating(User user, RatingDto rating);
+        public Task<int> EnsureCreated_AdminAt101();
     }
 }

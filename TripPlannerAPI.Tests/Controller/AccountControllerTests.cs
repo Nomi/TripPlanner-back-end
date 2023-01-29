@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TripPlannerAPI.DTOs.AccountDTOs;
+using TripPlannerAPI.Repositories;
 
 namespace TripPlannerAPI.Tests.Controller
 {
@@ -22,10 +23,12 @@ namespace TripPlannerAPI.Tests.Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly IUserRatingRepository _userRatingRepository; //Only exists for: EnsureCreated_AdminAt101() in AccountController
         public AccountControllerTests()
         {
             _userManager = A.Fake<UserManager<User>>();
             _tokenService = A.Fake<ITokenService>();
+            _userRatingRepository=A.Fake<IUserRatingRepository>(); //Only exists for: EnsureCreated_AdminAt101() in AccountController
         }
 
 
@@ -46,7 +49,7 @@ namespace TripPlannerAPI.Tests.Controller
             A.CallTo(() => _userManager.CreateAsync(A<User>.That.Matches(u => u.UserName == registerDto.UserName), registerDto.Password)).Returns(idRes);             //A<User>.Ignored
             A.CallTo(() => _tokenService.GenerateToken(A<User>.That.Matches(u => u.UserName == registerDto.UserName))).Returns(token);
 
-            var controller = new AccountController(_userManager, _tokenService);
+            var controller = new AccountController(_userManager, _tokenService, _userRatingRepository);
 
 
             ///Act
@@ -72,7 +75,7 @@ namespace TripPlannerAPI.Tests.Controller
             A.CallTo(() => _userManager.FindByNameAsync(loginDto.UserName)).Returns(user);
             A.CallTo(() => _userManager.CheckPasswordAsync(user, loginDto.Password)).Returns(true);
             A.CallTo(() => _tokenService.GenerateToken(A<User>.That.Matches(u => u.UserName == loginDto.UserName))).Returns(token);
-            var controller = new AccountController(_userManager, _tokenService);
+            var controller = new AccountController(_userManager, _tokenService, _userRatingRepository); // _userRatingRepository exists only for: EnsureCreated_AdminAt101() in AccountController
 
             ///Act:
             var result = controller.Login(loginDto);
@@ -85,7 +88,7 @@ namespace TripPlannerAPI.Tests.Controller
         public void AccountController_GetCurrentUserForAuthorizedUser_ReturnsUser()
         {
             ///Arrange:
-            var controller = new AccountController(_userManager, _tokenService);
+            var controller = new AccountController(_userManager, _tokenService, _userRatingRepository); // _userRatingRepository exists only for: EnsureCreated_AdminAt101() in AccountController
             String username = "test";
             String email = "test@test.test";
             User user = AuthorizeContext(controller, username);
