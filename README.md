@@ -1,5 +1,21 @@
 # TripPlanner (full-stack)
 
+## Table of Contents
+ 1. [Introduction](#introduction)
+ 1. [How to build and run server:](#how-to-build-and-run-server)
+   - [Prerequisites](#prerequisites)
+   - [Database creation and migration:](#database-creation-and-migration)
+   - [Build](#build)
+   - [Run](#run)
+ 1. [How to access the application:](#how-to-access-the-application)
+   - [API Spec](#api-spec)
+   - [Front-end](#front-end)
+   - [Front-end (Admin Panel)](#front-end-admin-panel)
+
+##Introduction:
+The full-stack version of the TripPlanner API Web Application. A social network for people who love road trips.
+Built using the following stack: C# (.NET 5), Entity Framework (the ORM), JavaSript, ReactJS, and MS SQL Server, among others.
+
 ## How to build and run server:
 \[frontend non-static/source codes' instructions are in the readme.md in its folder,but as long as no changes are made to the frontend sourcecode, you can just ignore building that because wwwroot contains a build (which is the latest as of writing this).\]
 
