@@ -47,6 +47,12 @@ http://127.0.0.1:7034/
 ```
 
 **Front-end (Admin Panel):**
-Need to serve the frontend separately if you want to use it (check instructions on the readme.md in the sourcecode for the frontend inside wwwrootfolder).
-To access this, use the url format:
-\*BASE_URL\*/admin
+To make sure Admin account exists, send an empty HTTP Post request to the endpoint "​/api​/Account​/ensure-Admin@101-created" (if it needs content type, try the JSON content type).
+I realize now after so long that there were better ways to handle default Admin account creation (and honestly, a lot of things) but I have improved on it and everything else in the WebAPIs I made afterwords.
+
+```
+http://127.0.0.1:7034/admin
+```
+
+Default Admin Username: Admin@101
+Default Admin Password: Admin@101
