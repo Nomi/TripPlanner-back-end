@@ -36,10 +36,7 @@ URL:
 ```
 http://127.0.0.1:7034/api
 ```
-or the full url:
-```
-http://127.0.0.1:7034/api/index.html
-```
+or the full url: *http://127.0.0.1:7034/api/index.html*
 
 **Front-end:**
 ```
