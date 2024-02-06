@@ -47,6 +47,22 @@ namespace TripPlannerAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "522a963a-74a5-4b90-a087-df0c0056c119",
+                            ConcurrencyStamp = "f00b2976-7722-428d-95f3-f36bf477f966",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "3d19bc9a-8f90-49a8-b704-e87a9ee61b75",
+                            ConcurrencyStamp = "799778ef-dcd4-431f-9997-df1558a3045a",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

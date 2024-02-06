@@ -28,6 +28,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
 {
+    setup.SwaggerDoc("v1", new OpenApiInfo { Title = "TripPlanner API", Version = "v1" });
     // Include 'SecurityScheme' to use JWT Authentication
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
@@ -67,7 +68,7 @@ builder.Services.AddSwaggerGen(setup =>
 //);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("LOCAL_DB")));//("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
 //builder.Services.AddDbContext<AppDbContext>(opt =>
 //{
 //    //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -116,8 +117,16 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (true) //(app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(c=>
+    {
+        c.RouteTemplate = "api/{documentName}/swagger.json";
+    });
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/api/v1/swagger.json", "TripPlanner API Spec (Swagger)");
+
+        c.RoutePrefix = "api";
+    });
 }
 
 //app.UseHttpsRedirection();
@@ -136,10 +145,13 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseStaticFiles(); //for serving wwwroot react static files.
+
 app.MapControllers();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
 });
 
 app.Run();
