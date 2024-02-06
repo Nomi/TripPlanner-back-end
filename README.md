@@ -19,7 +19,9 @@ The full-stack version of the TripPlanner API Web Application. A social network 
 Built using the following stack: C# (.NET 5), Entity Framework (the ORM), JavaSript, ReactJS, and MS SQL Server, among others.
 
 ## How to build and run server
-\[frontend non-static/source codes' instructions are in the readme.md in its folder,but as long as no changes are made to the frontend sourcecode, you can just ignore building that because wwwroot contains a build (which is the latest as of writing this).\]
+\[frontend non-static/source codes' instructions are in the readme.md in its folder,but as long as no changes are made to the frontend sourcecode, you can just ignore building that because wwwroot contains a build (which is the latest as of writing this).\] 
+
+([Here's the direct link to the subdirectory containing the frontend sourcode, in case needed.](https://github.com/Nomi/TripPlanner-back-end/tree/FINAL-fullstack-app/TripPlannerAPI/wwwroot/.ReactSourceCode/TripPlanner-front-end))
 
 ### Prerequisites
 Before you begin, ensure you have the following prerequisites installed:
