@@ -47,7 +47,7 @@ http://127.0.0.1:7034/
 **Front-end (Admin Panel):**
 
 To make sure Admin account exists, send an empty HTTP Post request to the endpoint "​/api​/Account​/ensure-Admin@101-created" (if it needs content type, try the JSON content type).
-I realize now after so long that there were better ways to handle default Admin account creation (and honestly, a lot of things) but I have improved on it and everything else in the WebAPIs I made afterwords.
+I realize now after so long that there were better ways to handle default Admin account creation (and honestly, a lot of things) but I have improved on it and everything else in the WebAPIs I made afterwards.
 
 ```
 http://127.0.0.1:7034/admin
