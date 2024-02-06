@@ -150,7 +150,7 @@ namespace TripPlannerAPI.Controllers
 
 
         [Authorize]
-        [HttpPut("/my-favorites/add/{tripId}")]
+        [HttpPut("my-favorites/add/{tripId}")]
         [ProducesResponseType(typeof(MsgOnlyResp), 200)]
         [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(MsgOnlyResp), (int)HttpStatusCode.InternalServerError)]
@@ -187,7 +187,7 @@ namespace TripPlannerAPI.Controllers
 
 
         [Authorize]
-        [HttpGet("/my-favorites/all")]
+        [HttpGet("my-favorites/all")]
         [ProducesResponseType(typeof(TripListContainer), 200)]
         public async Task<ActionResult<MsgOnlyResp>> GetFavoriteTrips()
         {
@@ -199,7 +199,7 @@ namespace TripPlannerAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("/pins")]
+        [HttpPost("pins")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<PinDto>> AddPins(PinDto pins)

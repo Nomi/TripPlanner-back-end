@@ -20,7 +20,7 @@ namespace TripPlannerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("/{type}")]
+        [HttpGet("{type}")]
         [ProducesResponseType(typeof(ListLeaderboardTravellerDTO), 200)]
         public async Task<ActionResult<ListLeaderboardTravellerDTO>> GetLeaderboard(string type)
         {

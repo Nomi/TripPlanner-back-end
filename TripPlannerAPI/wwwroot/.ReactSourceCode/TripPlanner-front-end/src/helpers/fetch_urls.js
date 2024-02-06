@@ -19,16 +19,16 @@ const fetchUrls = {
   "get-my-trips":
     backendBaseUrl+"/api/Trip/my-trips",
   "get-favorite-trips":
-    backendBaseUrl+"/my-favorites/all",
+    backendBaseUrl+"/api/Trip/my-favorites/all",
   "add-favorite-trips":
-    backendBaseUrl+"/my-favorites/add",
+    backendBaseUrl+"/api/Trip/my-favorites/add",
   rating:
     backendBaseUrl+"/api/UserRating",
   preferences:
     backendBaseUrl+"/api/TripTypePreference",
   posts: backendBaseUrl+"/api/Post/trip",
-  pins: backendBaseUrl+"/pins",
-  leaderboard: backendBaseUrl+"",
+  pins: backendBaseUrl+"/api/Trip/pins",
+  leaderboard: backendBaseUrl+"/api/Leaderboard",
 };
 
 export default fetchUrls;
