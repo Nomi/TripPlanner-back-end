@@ -53,8 +53,8 @@ namespace TripPlannerAPI.Repositories
             string admEmail = "admin@admin.admin"; ///TODO: need to remove it being hardcoded.
             string admRoleName = "admin";
             //Check if the initialization is needed:
-            var adminAt101 = _appDbContext.Users.First(u => (u.UserName == admUsrName)); 
-            var adminRole = _appDbContext.Roles.First(r => (r.Name == admRoleName)); //The role should already be there (refer to AppDbContext class).
+            var adminAt101 = _appDbContext.Users.Where(u => (u.UserName == admUsrName)).FirstOrDefault(); 
+            var adminRole = _appDbContext.Roles.Where(r => (r.Name == admRoleName)).FirstOrDefault(); //The role should already be there (refer to AppDbContext class).
             if (adminAt101 != null && _appDbContext.UserRoles.Any(x => ((x.UserId == adminAt101.Id) && (x.RoleId == adminRole.Id)))) ///TODO: need to remove it being hardcoded.
             {
                 return 1;   // DB has already been seeded
