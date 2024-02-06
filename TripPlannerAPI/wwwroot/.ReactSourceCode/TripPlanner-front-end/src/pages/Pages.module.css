@@ -1,0 +1,10 @@
+.main-container {
+  margin: 1.5rem 3rem;
+  margin-top: 2rem;
+  height: calc(100vh - 56px - 3.5rem);
+}
+
+.home-container {
+  height: calc(100vh - 56px);
+  background-color: white;
+}

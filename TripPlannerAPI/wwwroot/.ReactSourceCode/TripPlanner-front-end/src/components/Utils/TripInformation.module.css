@@ -1,0 +1,13 @@
+.new-trip-control {
+  margin-bottom: 2rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  display: flex;
+  align-items: flex-end;
+}

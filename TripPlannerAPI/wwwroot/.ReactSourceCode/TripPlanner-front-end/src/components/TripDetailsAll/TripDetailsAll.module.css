@@ -1,0 +1,24 @@
+.new-trip-section {
+  height: 100%;
+}
+
+.new-trip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.map-details-container {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.map-only-container {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

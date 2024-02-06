@@ -1,0 +1,10 @@
+.home-page-container {
+  display: flex;
+  height: 100%;
+  padding: 3rem;
+  padding-left: 5rem;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../../assets/travel.png);
+  background-position: center;
+}

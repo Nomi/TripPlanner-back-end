@@ -1,0 +1,11 @@
+.no-trips-found {
+  margin: 1rem auto;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.tabs-container {
+  width: 66%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,26 @@
+.new-trip__control {
+  margin-bottom: 2rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.start-date input[type="date"]:before {
+  content: "Start date:";
+  margin-right: 0.33rem;
+}
+
+.end-date input[type="date"]:before {
+  content: "End date:";
+  margin-right: 0.33rem;
+}
+
+
+

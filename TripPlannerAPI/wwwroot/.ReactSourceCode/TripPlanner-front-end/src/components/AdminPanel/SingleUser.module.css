@@ -1,0 +1,11 @@
+.post-content {
+  width: 90%;
+  color: black;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.button-content {
+  width: 10%;
+  text-align: right;
+}
