@@ -20,7 +20,7 @@ using static TripPlannerAPI.Controllers.TripController;
 using System.Net;
 using static TripPlannerAPI.Controllers.TripController;
 
-namespace TripPlannerAPI.Tests.Controller
+namespace TripPlannerAPI.Tests.Unit.Controller
 {
     public class TripControllerTests
     {

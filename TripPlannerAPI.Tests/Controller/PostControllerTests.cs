@@ -19,7 +19,7 @@ using static TripPlannerAPI.Controllers.PostController;
 using System.Net;
 using TripPlannerAPI.DTOs.PostDTOs;
 
-namespace TripPlannerAPI.Tests.Controller
+namespace TripPlannerAPI.Tests.Unit.Controller
 {
     public class PostControllerTests
     {

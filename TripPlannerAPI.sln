@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripPlannerAPI", "TripPlannerAPI\TripPlannerAPI.csproj", "{AE97D498-1DD8-4286-B1EF-F8C04E39B7BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripPlannerAPI.Tests", "TripPlannerAPI.Tests\TripPlannerAPI.Tests.csproj", "{4ED4F525-D189-4EEE-92D3-0989C434775B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripPlannerAPI.Tests.Unit", "TripPlannerAPI.Tests\TripPlannerAPI.Tests.Unit.csproj", "{4ED4F525-D189-4EEE-92D3-0989C434775B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
