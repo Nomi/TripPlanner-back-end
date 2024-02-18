@@ -1,4 +1,4 @@
-# TripPlanner (full-stack)
+# TripPlanner (full-stack) (with Docker Compose)
 
 ## Table of Contents
 1. [Introduction](#introduction)
