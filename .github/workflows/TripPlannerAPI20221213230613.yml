@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Azure Web App TripPlannerAPI20221213230613
+name: Test, Build, and Deploy.
 on:
   push:
   pull_request:
