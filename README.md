@@ -40,13 +40,13 @@ docker compose --build
 
 URL:
 ```
-http://127.0.0.1:7034/api
+http://127.0.0.1:8080/api
 ```
-or the full url: *http://127.0.0.1:7034/api/index.html*
+or the full url: *http://127.0.0.1:8080/api/index.html*
 
 ### Front-end:
 ```
-http://127.0.0.1:7034/
+http://127.0.0.1:8080/
 ```
 
 ### Front-end (Admin Panel):
@@ -55,8 +55,11 @@ To make sure Admin account exists, send an empty HTTP Post request to the endpoi
 I realize now after so long that there were better ways to handle default Admin account creation (and honestly, a lot of things) but I have improved on it and everything else in the WebAPIs I made afterwards.
 
 ```
-http://127.0.0.1:7034/admin
+http://127.0.0.1:8080/admin
 ```
 
+
 Default Admin Username: Admin@101
+
+
 Default Admin Password: Admin@101
