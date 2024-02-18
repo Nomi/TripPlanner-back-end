@@ -19,8 +19,6 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -70,10 +68,7 @@ builder.Services.AddSwaggerGen(setup =>
 //);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DOCKER_MSSQLSERVER_LOCAL_DB"))
-        //options.UseNpgsql(builder.Configuration.GetConnectionString("DOCKER_POSTGRES_LOCAL_DB"))
-        );//("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
-
+        options.UseSqlServer(builder.Configuration.GetConnectionString("LOCAL_DB")));//("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
 //builder.Services.AddDbContext<AppDbContext>(opt =>
 //{
 //    //System.Diagnostics.Debug.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -133,14 +128,7 @@ if (true) //(app.Environment.IsDevelopment())
         c.RoutePrefix = "api";
     });
 }
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    //db.Database.EnsureDeleted();
-    //db.Database.EnsureCreated();
-    await db.Database.MigrateAsync();
 
-}
 //app.UseHttpsRedirection();
 
 
