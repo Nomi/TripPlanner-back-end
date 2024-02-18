@@ -14,7 +14,7 @@ services:
     expose:
       - 1433
     ports:
-      - 1469:1433
+      - 1433:1433
     healthcheck:
       #test: /opt/mssql-tools/bin/sqlcmd -U sa -P $(cat /run/secrets/db-password) -Q "SELECT 1"
       test: /opt/mssql-tools/bin/sqlcmd -U sa -P TarnishedPluto2023! -Q "SELECT 1"
