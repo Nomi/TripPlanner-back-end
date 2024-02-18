@@ -1,7 +1,7 @@
 # TripPlanner (full-stack)
 [![Build and Deploy](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml/badge.svg)](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml)
 
-***Find the Docker Compose based version on the [DOCKERIZED-FINAL-fullstack-app branch](https://github.com/Nomi/TripPlanner-back-end/tree/DOCKERIZED-FINAL-fullstack-app).***
+***Find the Docker Compose based version on the [DOCKERIZED-FINAL-fullstack-app](https://github.com/Nomi/TripPlanner-back-end/tree/DOCKERIZED-FINAL-fullstack-app) branch.***
 
 ## Table of Contents
 1. [Introduction](#introduction)
