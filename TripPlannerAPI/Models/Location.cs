@@ -1,7 +1,6 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity.Infrastructure;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.OpenApi.Validations.Rules;
 using System.Text.Json.Serialization;

@@ -1,13 +1,10 @@
-# TripPlanner (full-stack)
+# TripPlanner (full-stack) (with Docker Compose)
 [![Build and Deploy](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml/badge.svg)](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml)
 ## Table of Contents
 1. [Introduction](#introduction)
  
 2. [How to build and run server:](#how-to-build-and-run-server)
-  - [Prerequisites](#prerequisites)
-  - [Database creation and migration:](#database-creation-and-migration)
-  - [Build](#build)
-  - [Run](#run)
+  - [Build and Run](#build-and-run)
    
 3. [How to access the application:](#how-to-access-the-appliation)
   - [API Spec](#api-spec)
@@ -15,6 +12,7 @@
   - [Front-end (Admin Panel)](#front-end-admin-panel)
 
 ## Introduction
+(this version uses Docker Compose.)
 The full-stack version of the TripPlanner API Web Application. A social network for people who love road trips.
 Built using the following stack: C# (.NET 5), Entity Framework (the ORM), JavaSript, ReactJS, and MS SQL Server, among others.
 
@@ -25,26 +23,12 @@ Built using the following stack: C# (.NET 5), Entity Framework (the ORM), JavaSr
 
 ### Prerequisites
 Before you begin, ensure you have the following prerequisites installed:
-- .NET SDK: You can download and install it from [here](https://dotnet.microsoft.com/download).
-- MS SQL Server (**change connection string as needed**).
-- dotnet Entity Framework Core tools.
+- Docker
 
-
-### Database creation and migration
-You will need to do this process on the first run, **BUT, also** after any changes to the Model.
+### Build and Run
+In the base directory:
 ```bash
-dotnet ef migrations add *REPLACE_WITH_NAME_FOR_MIGRATION*
-```
-```bash
-dotnet ef database update
-```
-### Build
-```bash
-dotnet build
-```
-### Run
-```bash
-dotnet run
+docker compose --build
 ```
 
 ## How to access the appliation
