@@ -1,0 +1,133 @@
+﻿version: '3.8'  # Use the desired version of Docker Compose syntax
+
+#MS SQL SERVER WITHOUT MIGRATION:
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-CU11-ubuntu-22.04
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=TarnishedPluto2023!
+      - MSSQL_PID=Express
+    secrets:
+      - db-password
+    expose:
+      - 1433
+    ports:
+      - 1469:1433
+    healthcheck:
+      #test: /opt/mssql-tools/bin/sqlcmd -U sa -P $(cat /run/secrets/db-password) -Q "SELECT 1"
+      test: /opt/mssql-tools/bin/sqlcmd -U sa -P TarnishedPluto2023! -Q "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db-data:/var/opt/mssql
+  server:
+    build:
+      context: .
+      target: final
+    ports:
+      - 8080:80
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  db-data:
+secrets:
+  db-password:
+    file: ./.secrets/db/password.txt
+
+
+
+#POSTGRES WITH MIGRATION ATTEMPT (doesn't work yet)
+#services:
+#  server:
+#    build:
+#      context: .
+#      target: final
+#    ports:
+#      - 8080:80
+#    depends_on:
+#      - db
+#      #- migration  # Add dependency on migration service
+#    environment:
+#      - CONNECTION_STRING=Host=db;Port=5432;Database=TripPlannerDB;Username=tpdbadmin;Password=$(POSTGRES_PASSWORD)  # Pass connection string to the server service
+#  db:
+#    image: postgres
+#    restart: always
+#    environment:
+#      - POSTGRES_DB=TripPlannerDB
+#      - POSTGRES_USER=tpdbadmin
+#      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+#    expose:
+#      - 5432
+#    healthcheck:
+#      test: [ "CMD", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#  migration:  # New service for running migrations
+#    build:
+#      context: .
+#      target: migrate  # Use the build target for migrations
+#    depends_on:
+#      - db
+#    environment:
+#      - POSTGRES_DB=TripPlannerDB
+#      - POSTGRES_USER=tpdbadmin
+#      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+#    secrets:
+#      - db-password
+#    entrypoint: ["dotnet", "ef", "database", "update"]  # Specify the entrypoint to run migrations
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#      - ./.secrets/db:/run/secrets  # Mount secrets for migrations
+#    command: ["--connection", "Host=db;Port=5432;Database=TripPlannerDB;Username=tpdbadmin;Password=$(cat /run/secrets/db-password)"]  # Pass connection string as command
+#    restart: "no"  # Ensure migration service does not restart
+
+#volumes:
+#  db-data:
+
+#secrets:
+#  db-password:
+#    file: .secrets/db/password.txt
+
+
+#### POSTGRES WITHOUT MIGRATION ATTEMPT:
+#services:
+#  server:
+#    build:
+#      context: .
+#      target: final
+#    ports:
+#      - 8080:80
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#  db:
+#    image: postgres
+#    restart: always
+#    #user: tpdbadmin
+#    secrets:
+#      - db-password
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=TripPlannerDB
+#      - POSTGRES_USER=tpdbuser
+#      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+#    expose:
+#      - 5432
+#    ports:
+#      - 8001:5432
+#    healthcheck:
+#      test: pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#volumes:
+#  db-data:
+#secrets:
+#  db-password:
+#    file: ./.secrets/db/password.txt
