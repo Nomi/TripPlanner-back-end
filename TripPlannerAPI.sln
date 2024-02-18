@@ -7,13 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripPlannerAPI", "TripPlann
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripPlannerAPI.Tests.Unit", "TripPlannerAPI.Tests\TripPlannerAPI.Tests.Unit.csproj", "{4ED4F525-D189-4EEE-92D3-0989C434775B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A8E1E7A-0DEA-4372-8698-42FE0F4A5B15}"
-	ProjectSection(SolutionItems) = preProject
-		compose.yaml = compose.yaml
-		Dockerfile = Dockerfile
-		.secrets\db\password.txt = .secrets\db\password.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

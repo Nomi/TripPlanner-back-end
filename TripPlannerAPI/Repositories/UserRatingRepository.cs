@@ -54,11 +54,7 @@ namespace TripPlannerAPI.Repositories
             string admRoleName = "admin";
             //Check if the initialization is needed:
             var adminAt101 = _appDbContext.Users.Where(u => (u.UserName == admUsrName)).FirstOrDefault(); 
-            var adminRole = _appDbContext.Roles.Where(r => (r.Name.ToLower() == admRoleName.ToLower())).FirstOrDefault(); //The role should already be there (refer to AppDbContext class).
-            if(adminRole== null)
-            {
-                throw new Exception("Admin role either does not exist or the hardcoded string in this function is outdated.");
-            }    
+            var adminRole = _appDbContext.Roles.Where(r => (r.Name == admRoleName)).FirstOrDefault(); //The role should already be there (refer to AppDbContext class).
             if (adminAt101 != null && _appDbContext.UserRoles.Any(x => ((x.UserId == adminAt101.Id) && (x.RoleId == adminRole.Id)))) ///TODO: need to remove it being hardcoded.
             {
                 return 1;   // DB has already been seeded
@@ -69,8 +65,8 @@ namespace TripPlannerAPI.Repositories
 
                 var result = await _userManager.CreateAsync(adminAt101, admPass); 
             }
-            var roleResult = await _userManager.AddToRoleAsync(adminAt101, adminRole.Name);
             _appDbContext.SaveChanges();
+            var roleResult = await _userManager.AddToRoleAsync(adminAt101, adminRole.Name);
             return 0;
         }
     }

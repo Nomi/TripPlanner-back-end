@@ -17,7 +17,7 @@ namespace TripPlannerAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.16")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -51,15 +51,15 @@ namespace TripPlannerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1ffd3fa0-7784-4e9f-91ef-a0ee5434ac48",
-                            ConcurrencyStamp = "c577c01b-e034-427c-8ecb-173139f2d22c",
+                            Id = "522a963a-74a5-4b90-a087-df0c0056c119",
+                            ConcurrencyStamp = "f00b2976-7722-428d-95f3-f36bf477f966",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "d14f6ba9-d3c2-4c3e-b749-40f5b787a59b",
-                            ConcurrencyStamp = "459ac5c5-8227-459d-ab47-f873bc5068b8",
+                            Id = "3d19bc9a-8f90-49a8-b704-e87a9ee61b75",
+                            ConcurrencyStamp = "799778ef-dcd4-431f-9997-df1558a3045a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
