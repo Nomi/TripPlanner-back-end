@@ -1,4 +1,5 @@
 # TripPlanner (full-stack) (with Docker Compose)
+[![Build and Deploy](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml/badge.svg)](https://github.com/Nomi/TripPlanner-back-end/actions/workflows/TripPlannerAPI20221213230613.yml)
 
 ## Table of Contents
 1. [Introduction](#introduction)
