@@ -5,7 +5,6 @@
  
 2. [How to build and run server:](#how-to-build-and-run-server)
   - [Build and Run](#build-and-run)
-  - [Run](#run)
    
 3. [How to access the application:](#how-to-access-the-appliation)
   - [API Spec](#api-spec)
