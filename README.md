@@ -26,7 +26,7 @@ Before you begin, ensure you have the following prerequisites installed:
 - Docker
 
 ### Build and Run
-In the base directory of the whole project.
+In the base directory:
 ```bash
 docker compose --build
 ```
