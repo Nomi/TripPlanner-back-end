@@ -22,6 +22,12 @@ WORKDIR /source/TripPlannerAPI
 # Placing it here allows the previous steps to be cached across architectures.
 ARG TARGETARCH
 
+# Run Entity Framework Core migrations
+RUN dotnet tool install --global dotnet-ef --version 7.0.17
+#RUN find / -name dotnet-ef -type f
+#RUN dotnet tool list --global
+RUN /root/.dotnet/tools/dotnet-ef migrations add initial12121
+
 # Build the application.
 # Leverage a cache mount to /root/.nuget/packages so that subsequent builds don't have to re-download packages.
 # If TARGETARCH is "amd64", replace it with "x64" - "x64" is .NET's canonical name for this and "amd64" doesn't
