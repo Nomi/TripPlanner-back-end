@@ -69,8 +69,10 @@ builder.Services.AddSwaggerGen(setup =>
 //    }
 //);
 
+bool isDbSqlite = true;
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DOCKER_MSSQLSERVER_LOCAL_DB"))
+        options.UseSqlite(builder.Configuration.GetConnectionString("SQLITE_DB_CONNECTIONSTRING"))
+        //options.UseSqlServer(builder.Configuration.GetConnectionString("DOCKER_MSSQLSERVER_LOCAL_DB"))
         //options.UseNpgsql(builder.Configuration.GetConnectionString("DOCKER_POSTGRES_LOCAL_DB"))
         );//("AZURE_SQL_CONNECTIONSTRING"))); //("LOCAL_DB")));
 
